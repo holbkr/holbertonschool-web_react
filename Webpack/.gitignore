@@ -3,7 +3,9 @@ node_modules/
 
 # Fichiers générés par Webpack pour chaque task
 task_0/dist/
-task_1/public/
+task_1/public/*
+!task_1/public/index.html
+
 task_2/public/
 task_3/public/
 
