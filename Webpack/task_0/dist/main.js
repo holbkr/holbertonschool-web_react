@@ -26,7 +26,7 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!\n * jQ
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n\n\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Holberton Dashboard</p>');\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Dashboard data for the students</p>');\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Copyright - Holberton School</p>');\n\n\n//# sourceURL=webpack://task_0/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);\n// src/index.js\n\n\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Holberton Dashboard</p>');\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Dashboard data for the students</p>');\njquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append('<p>Copyright - Holberton School</p>');\n\n\n//# sourceURL=webpack://task_0/./src/index.js?");
 
 /***/ })
 
