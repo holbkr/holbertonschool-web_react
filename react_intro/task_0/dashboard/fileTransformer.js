@@ -1,11 +1,9 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export function process(src, filename) {
-  return {
-    code: 'module.exports = ' + JSON.stringify(path.basename(filename)) + ';',
-  };
-}
+export default {
+  process(sourceText, sourcePath, options) {
+    return {
+      code: `module.exports = ${JSON.stringify(path.basename(sourcePath))};`,
+    };
+  },
+};

@@ -1,10 +1,7 @@
-import React from 'react';
-import './App.css';
-import logo from './assets/holberton-logo.jpg';
+import "./App.css";
+import logo from "./assets/holberton-logo.jpg";
 
 function App() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <>
       <div className="App-header">
@@ -15,7 +12,7 @@ function App() {
         <p>Login to access the full dashboard</p>
       </div>
       <div className="App-footer">
-        <p>Copyright {currentYear} - holberton School</p>
+        <p>Copyright {new Date().getFullYear()} - holberton School</p>
       </div>
     </>
   );
