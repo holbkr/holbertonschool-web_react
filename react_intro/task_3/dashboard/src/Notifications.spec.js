@@ -1,31 +1,33 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import Notifications from './Notifications';
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Notifications } from "./Notifications";
 
-describe('Notifications component', () => {
-  test('renders notifications title', () => {
-    render(<Notifications />);
-    const title = screen.getByText(/here is the list of notifications/i);
-    expect(title).toBeInTheDocument();
-  });
+test('Check the existence of the notifications title Here is the list of notifications', () => {
+  render(<Notifications />);
+  const notiftitle = screen.getByText(/Here is the list of notifications/i);
 
-  test('renders the close button', () => {
-    render(<Notifications />);
-    const button = screen.getByRole('button', { name: /close/i });
-    expect(button).toBeInTheDocument();
-  });
+  expect(notiftitle).toBeInTheDocument();
+})
 
-  test('renders three list items', () => {
-    render(<Notifications />);
-    const listItems = screen.getAllByRole('listitem');
-    expect(listItems).toHaveLength(3);
-  });
+test('Check the existence of the button element in the notifications', () => {
+  render(<Notifications />);
+  const button = screen.getByRole('button');
 
-  test('clicking close button logs message', () => {
-    console.log = jest.fn(); // Mock console.log
-    render(<Notifications />);
-    const button = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(button);
-    expect(console.log).toHaveBeenCalledWith('Close button has been clicked');
-  });
-});
+  expect(button).toBeInTheDocument();
+})
+
+test('Verify that there are 3 li elements as notifications rendered', () => {
+  render(<Notifications />);
+  const lielements = screen.getAllByRole('listitem');
+
+  expect(lielements.length).toBe(3);
+})
+
+test('Check whether clicking the close button logs Close button has been clicked to the console.', () => {
+  const consolelog = jest.spyOn(console, 'log');
+  render(<Notifications />);
+  const button = screen.getByRole('button', { name: /close/i });
+
+  fireEvent.click(button);
+
+  expect(consolelog).toHaveBeenCalledWith('Close button has been clicked');
+})
