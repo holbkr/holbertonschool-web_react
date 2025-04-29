@@ -16,7 +16,6 @@ function App() {
       <div className="App-body">
         <p>Login to access the full dashboard</p>
 
-        {/* Ajout pour Task 3 : formulaire de login */}
         <div className="App-login">
           <label htmlFor="email">Email:</label>
           <input type="email" id="email" name="email" />
