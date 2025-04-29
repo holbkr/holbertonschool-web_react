@@ -7,17 +7,22 @@ import Login from './Login';
 describe('Login', () => {
   test('renders 2 labels, 2 inputs and 1 button', () => {
     render(<Login />);
-    expect(screen.getAllByLabelText(/Email|Password/)).toHaveLength(2);
-    expect(screen.getAllByRole('textbox')).toHaveLength(1); // email
-    expect(screen.getAllByLabelText(/Password/)).toHaveLength(1); // password
-    expect(screen.getByRole('button', { name: /ok/i })).toBeInTheDocument();
+    const labels = screen.getAllByLabelText(/Email|Password/i);
+    const inputs = screen.getAllByRole('textbox');
+    const passwordInput = screen.getByLabelText(/password/i);
+    const button = screen.getByRole('button', { name: /ok/i });
+
+    expect(labels.length).toBe(2);
+    expect(inputs.length).toBe(1); // email input
+    expect(passwordInput).toBeInTheDocument(); // password input
+    expect(button).toBeInTheDocument();
   });
 
-  test('focuses input when label is clicked', async () => {
+  test('focus input when clicked', async () => {
     render(<Login />);
     const user = userEvent.setup();
-    const emailLabel = screen.getByLabelText(/email/i);
-    await user.click(emailLabel);
-    expect(emailLabel).toHaveFocus(); // Note: might need refactor if label isn't "for" input
+    const emailInput = screen.getByLabelText(/email/i);
+    await user.click(emailInput);
+    expect(emailInput).toHaveFocus();
   });
 });
