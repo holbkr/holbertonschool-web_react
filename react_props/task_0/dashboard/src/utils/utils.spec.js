@@ -1,4 +1,4 @@
-import { getCurrentYear, getFooterCopy } from './utils';
+import { getCurrentYear, getFooterCopy, getLatestNotification } from './utils';
 
 describe('Utils functions', () => {
   test('getCurrentYear returns the current year', () => {
@@ -12,5 +12,9 @@ describe('Utils functions', () => {
 
   test('getFooterCopy returns "Holberton School main dashboard" when false', () => {
     expect(getFooterCopy(false)).toBe('Holberton School main dashboard');
+  });
+
+  test('getLatestNotification returns the correct string', () => {
+    expect(getLatestNotification()).toBe('<strong>Urgent requirement</strong> - complete by EOD');
   });
 });
