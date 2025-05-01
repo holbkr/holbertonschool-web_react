@@ -1,11 +1,20 @@
+/* Conteneur toujours visible */
+.notifications-title {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* Conteneur des notifications, visible seulement si displayDrawer est true */
 .notifications {
   border: 2px dashed red;
   padding: 10px;
   margin: 10px;
   position: relative;
+  background-color: #fff;
 }
 
-/* Style du paragraphe */
+/* Paragraphe descriptif */
 .notifications p {
   margin: 0 0 10px 0;
 }
@@ -17,18 +26,26 @@
   margin: 0;
 }
 
-/* Style des <li> selon priorité */
-.notifications li[data-priority="default"] {
+/* Notification par priorité */
+.notifications li[data-notification-type="default"] {
   color: blue;
 }
 
-.notifications li[data-priority="urgent"] {
+.notifications li[data-notification-type="urgent"] {
   color: red;
 }
 
-/* Image du bouton de fermeture */
+/* Bouton de fermeture */
+.notifications button {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
 .notifications button img {
   width: 10px;
   height: 10px;
 }
-
