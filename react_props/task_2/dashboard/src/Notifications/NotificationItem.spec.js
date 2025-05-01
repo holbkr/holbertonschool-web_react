@@ -1,17 +1,21 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import NotificationItem from './NotificationItem';
+import NotificationItem from "./NotificationItem";
+import { render, screen } from "@testing-library/react";
 
-describe('NotificationItem', () => {
-  test('renders default notification with blue color', () => {
-    render(<NotificationItem type="default" value="Test message" />);
-    const item = screen.getByText('Test message');
-    expect(item).toHaveAttribute('data-notification-type', 'default');
-  });
+test('Check whether the li element has the color blue, and the the attribute data-notification-type set to default', () => {
+  render(<NotificationItem type="default" value="Test notification" />);
+  const li = screen.getByText('Test notification');
 
-  test('renders urgent notification with red color', () => {
-    render(<NotificationItem type="urgent" value="Urgent message" />);
-    const item = screen.getByText('Urgent message');
-    expect(item).toHaveAttribute('data-notification-type', 'urgent');
-  });
-});
+  expect(li).toBeInTheDocument();
+  expect(li).toHaveAttribute('data-notification-type', 'default');
+  expect(li).toHaveStyle('color: blue');
+})
+
+
+test('Check whether the li element has the color red, and the the attribute data-notification-type set to urgent', () => {
+  render(<NotificationItem type="urgent" value="Test urgent notification" />);
+  const li = screen.getByText('Test urgent notification');
+
+  expect(li).toBeInTheDocument();
+  expect(li).toHaveAttribute('data-notification-type', 'urgent');
+  expect(li).toHaveStyle('color: red');
+})

@@ -1,46 +1,43 @@
-import './Notifications.css';
-import React from 'react';
-import closebtn from '../assets/close-button.png';
+import './Notifications.css'
+import closebtn from '../assets/close-button.png'
 import NotificationItem from './NotificationItem';
 
-export default function Notifications({ notifications = [] }) {
+export default function Notifications({ notifications }) {
   return (
     <>
       <div className="notifications">
-        <p>Here is the list of notifications</p>
+        <p>
+        Here is the list of notifications
+        </p>
         <button
-          style={{
-            position: 'absolute',
-            display: 'flex',
-            background: 'none',
-            borderStyle: 'none',
-            right: '1rem',
-            top: '0.8rem',
-            width: '0.5rem',
-            height: '0.5rem',
-          }}
-          onClick={() => console.log('Close button has been clicked')}
-          aria-label="Close"
-        >
+        style={{
+          position: "absolute",
+          display: "flex",
+          background: "none",
+          borderStyle: "none",
+          right: "1rem",
+          top: "0.8rem",
+          width: "0.5rem",
+          height: "0.5rem",
+        }}
+        onClick={() => console.log('Close button has been clicked')} aria-label="Close">
           <img
-            style={{
-              width: '0.5rem',
-              height: '0.5rem',
-            }}
-            src={closebtn}
-            alt="Close"
-          />
+          style={{
+            width: "0.5rem",
+            height: "0.5rem",
+          }}
+          src={ closebtn } alt='CLose' />
         </button>
         <ul>
-          {notifications.map((notif) => (
+          {notifications.map((notification) => (
             <NotificationItem
-              key={notif.id}
-              type={notif.type}
-              value={notif.value}
-              html={notif.html}
+            key={notification.id}
+            type={notification.type}
+            value={notification.value}
+            html={notification.html}
             />
           ))}
-        </ul>
+          </ul>
       </div>
     </>
   );
