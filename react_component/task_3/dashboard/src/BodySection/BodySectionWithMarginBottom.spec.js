@@ -1,24 +1,25 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { shallow } from 'enzyme';
 import BodySectionWithMarginBottom from './BodySectionWithMarginBottom';
+import BodySection from './BodySection';
 
-describe('BodySectionWithMarginBottom', () => {
-  test('renders a div with class bodySectionWithMargin', () => {
-    const { container } = render(
-      <BodySectionWithMarginBottom title="Margin Title">
-        <p>Some content</p>
+describe('<BodySectionWithMarginBottom />', () => {
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = shallow(
+      <BodySectionWithMarginBottom title="test title">
+        <p>test children node</p>
       </BodySectionWithMarginBottom>
     );
-    expect(container.firstChild).toHaveClass('bodySectionWithMargin');
   });
 
-  test('renders the BodySection component inside', () => {
-    render(
-      <BodySectionWithMarginBottom title="Test Section">
-        <p>Child element</p>
-      </BodySectionWithMarginBottom>
-    );
-    expect(screen.getByText('Test Section')).toBeInTheDocument();
-    expect(screen.getByText('Child element')).toBeInTheDocument();
+  it('should render a BodySection component', () => {
+    expect(wrapper.find(BodySection).length).toBe(1);
+  });
+
+  it('should pass the correct props to BodySection', () => {
+    expect(wrapper.find(BodySection).prop('title')).toEqual('test title');
+    expect(wrapper.find(BodySection).prop('children')).toEqual(<p>test children node</p>);
   });
 });
