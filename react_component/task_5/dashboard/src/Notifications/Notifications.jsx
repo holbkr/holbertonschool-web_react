@@ -11,7 +11,10 @@ class Notifications extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.notifications.length > this.props.notifications.length;
+    return (
+      nextProps.notifications.length !== this.props.notifications.length ||
+      nextProps.displayDrawer !== this.props.displayDrawer
+    );
   }
 
   markAsRead(id) {
@@ -19,23 +22,31 @@ class Notifications extends React.Component {
   }
 
   render() {
-    const { notifications = [], displayDrawer = true } = this.props;
+    const { notifications, displayDrawer } = this.props;
 
     return (
       <>
         <div className='notifications-title'>
           <p>Your notifications</p>
         </div>
-        {displayDrawer ? (
+        {displayDrawer && (
           <div className="notifications">
             {notifications.length > 0 ? (
               <>
                 <p>Here is the list of notifications</p>
                 <button
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    border: 'none',
+                    background: 'transparent',
+                    cursor: 'pointer'
+                  }}
                   onClick={() => console.log('Close button has been clicked')}
                   aria-label="Close"
                 >
-                  <img src={closebtn} alt='Close' />
+                  <img src={closebtn} alt="Close" />
                 </button>
                 <ul>
                   {notifications.map((notification) => (
@@ -54,7 +65,7 @@ class Notifications extends React.Component {
               <p>No new notification for now</p>
             )}
           </div>
-        ) : null}
+        )}
       </>
     );
   }
@@ -80,4 +91,3 @@ Notifications.defaultProps = {
 };
 
 export default Notifications;
-
