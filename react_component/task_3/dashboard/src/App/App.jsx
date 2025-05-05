@@ -17,7 +17,13 @@ class App extends React.Component {
   }
 
   static defaultProps = {
-    logOut: () => {}
+    logOut: () => {},
+    isLoggedIn: false
+  };
+
+  static propTypes = {
+    logOut: PropTypes.func,
+    isLoggedIn: PropTypes.bool
   };
 
   componentDidMount() {
@@ -36,7 +42,7 @@ class App extends React.Component {
   }
 
   render() {
-    const isLoggedIn = false;
+    const { isLoggedIn } = this.props;
 
     const notificationsList = [
       { id: 1, type: 'urgent', value: 'New course available' },
@@ -73,9 +79,5 @@ class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  logOut: PropTypes.func,
-};
 
 export default App;
