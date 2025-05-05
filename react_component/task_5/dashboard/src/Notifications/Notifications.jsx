@@ -9,6 +9,10 @@ class Notifications extends React.Component {
     this.markAsRead = this.markAsRead.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.notifications.length !== this.props.notifications.length;
+  }
+
   markAsRead(id) {
     console.log(`Notification ${id} has been marked as read`);
   }
@@ -18,7 +22,7 @@ class Notifications extends React.Component {
 
     return (
       <>
-        <div className='notifications-title'>
+        <div className="notifications-title">
           <p>Your notifications</p>
         </div>
         {displayDrawer ? (
@@ -30,7 +34,7 @@ class Notifications extends React.Component {
                   onClick={() => console.log('Close button has been clicked')}
                   aria-label="Close"
                 >
-                  <img src={closebtn} alt='Close' />
+                  <img src={closebtn} alt="Close" />
                 </button>
                 <ul>
                   {notifications.map((notification) => (
@@ -56,3 +60,21 @@ class Notifications extends React.Component {
 }
 
 export default Notifications;
+Notifications.defaultProps = {
+  displayDrawer: true,
+  notifications: [],
+};
+Notifications.propTypes = {
+  displayDrawer: PropTypes.bool,
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      type: PropTypes.string,
+      value: PropTypes.string,
+      html: PropTypes.shape({
+        __html: PropTypes.string,
+      }),
+    })
+  ),
+};
+import PropTypes from 'prop-types';
