@@ -7,6 +7,8 @@ import Login from '../Login/Login';
 import PropTypes from 'prop-types';
 import CourseList from '../CourseList/CourseList';
 import { getLatestNotification } from '../utils/utils';
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,22 +16,18 @@ class App extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  // 1. Default prop logOut (obligatoire)
   static defaultProps = {
     logOut: () => {}
   };
 
-  // 2. Lifecycle method: ajouter event listener
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
-  // 3. Supprimer le listener à l'unmount
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  // 4. Gestion du raccourci Ctrl + h
   handleKeyDown(e) {
     if (e.ctrlKey && e.key === 'h') {
       alert('Logging you out');
@@ -58,15 +56,26 @@ class App extends React.Component {
           <Notifications notifications={notificationsList} />
         </div>
         <Header />
-        {isLoggedIn ? <CourseList courses={coursesList} /> : <Login />}
+        {isLoggedIn ? (
+          <BodySectionWithMarginBottom title="Course list">
+            <CourseList courses={coursesList} />
+          </BodySectionWithMarginBottom>
+        ) : (
+          <BodySectionWithMarginBottom title="Log in to continue">
+            <Login />
+          </BodySectionWithMarginBottom>
+        )}
+        <BodySection title="News from the School">
+          <p>Holberton School News goes here</p>
+        </BodySection>
         <Footer />
       </>
     );
   }
 }
 
-export default App;
-
 App.propTypes = {
   logOut: PropTypes.func,
 };
+
+export default App;
