@@ -1,125 +1,170 @@
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import Notifications from "./Notifications";
-import { getLatestNotification } from "../utils/utils.js";
+import React from 'react';
+import { shallow } from 'enzyme';
+import Notifications from './Notifications';
+import { getLatestNotification } from '../utils/utils';
 
-describe('Notifications', () => {
-  const mockNotifications = [
+const listNotifications = [
+  { id: 1, type: "default", value: "New course available" },
+  { id: 2, type: "urgent", value: "New resume available" },
+  { id: 3, html: { __html: getLatestNotification() }, type: "urgent" }
+];
+
+describe('Notifications Component with listNotifications', () => {
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
+  });
+
+  // Test that the component renders three list items
+  it('renders three list items', () => {
+    expect(wrapper.find('NotificationItem').length).toBe(3);
+  });
+
+  // Test that the component renders the text "Here is the list of notifications"
+  it('renders the text "Here is the list of notifications"', () => {
+    expect(wrapper.contains(<p>Here is the list of notifications</p>)).toBe(true);
+  });
+
+  it('renders the first NotificationItem with the correct HTML', () => {
+    const firstNotificationItem = wrapper.find('NotificationItem').at(0);
+
+    // On accède au premier NotificationItem et on vérifie son contenu HTML
+    expect(firstNotificationItem.html()).toContain('<li class="default" data-notification-type="default">New course available</li>');
+  });
+
+  it('should display the menu item when displayDrawer is false', () => {
+    const wrapper = shallow(<Notifications />);
+    expect(wrapper.find('.menuItem').length).toBe(1);
+  });
+
+  it('should not display the Notifications when displayDrawer is false', () => {
+    const wrapper = shallow(<Notifications />);
+    expect(wrapper.find('.Notifications').length).toBe(0);
+  });
+
+  it('renders list of notifications correctly and with the right number of NotificationItem', () => {
+    expect(wrapper.find('NotificationItem').length).toBe(3);
+    expect(wrapper.find('NotificationItem').at(0).props()).toEqual({
+      type: 'default',
+      value: 'New course available',
+      html: undefined,
+      id: 1,
+      markAsRead: expect.any(Function),
+
+    });
+
+    expect(wrapper.find('NotificationItem').at(1).props()).toEqual({
+      type: 'urgent',
+      value: 'New resume available',
+      html: undefined,
+      id: 2,
+      markAsRead: expect.any(Function),
+    });
+
+    expect(wrapper.find('NotificationItem').at(2).props()).toEqual({
+      type: 'urgent',
+      html: { __html: getLatestNotification() },
+      id: 3,
+      markAsRead: expect.any(Function),
+    });
+  });
+
+  describe('Notifications Component without listNotifications', () => {
+    let wrapper;
+
+    beforeEach(() => {
+      wrapper = shallow(<Notifications displayDrawer={true} />);
+    });
+
+    // Test that Notifications renders without crashing
+    it('renders Notifications without crashing', () => {
+    });
+
+    it('should display the menu item when displayDrawer is true', () => {
+      expect(wrapper.find('.menuItem').length).toBe(1);
+    });
+
+    it('should display the Notifications when displayDrawer is true', () => {
+      expect(wrapper.find('.Notifications').length).toBe(1);
+    });
+  })
+
+  describe('Notifications Component with listNotifications empty', () => {
+    let wrapper;
+
+    beforeEach(() => {
+      wrapper = shallow(<Notifications displayDrawer={true} listNotifications={[]} />);
+    });
+    it('should not display the message "Here is the list of notifications" if listNotifications is empty, but "No new notification for now"', () => {
+      expect(wrapper.contains(<li>No new notification for now</li>)).toBe(true);
+      expect(wrapper.contains(<p>Here is the list of notifications</p>)).toBe(false);
+    });
+    it('should render correctly if you pass an empty array or if you dont pass the listNotifications property', () => {
+      expect(wrapper.contains(<li>No new notification for now</li>)).toBe(true);
+    });
+  })
+})
+
+describe('Notifications Component', () => {
+  it('calls console.log with the right message when markAsRead is called', () => {
+    // Mocking console.log
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+    // Create an instance of the Notifications component
+    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={[{ id: 1, value: 'New course available', type: 'default' }]} />);
+    const instance = wrapper.instance();
+
+    // Call the markAsRead method directly
+    instance.markAsRead(1);
+
+    // Check that console.log was called with the right message
+    expect(spy).toHaveBeenCalledWith('Notification 1 has been marked as read');
+
+    // Restore console.log
+    spy.mockRestore();
+  });
+});
+
+describe('Notifications component', () => {
+  it('should not re-render when updating with the same list', () => {
+    const listNotifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' }
+    ];
+
+    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
+
+    const shouldUpdateSpy = jest.spyOn(Notifications.prototype, 'shouldComponentUpdate');
+
+    // Met à jour les props avec la même liste
+    wrapper.setProps({ listNotifications });
+
+    // Vérifie que `shouldComponentUpdate` a retourné false
+    expect(shouldUpdateSpy).toHaveReturnedWith(false);
+  });
+});
+
+it('should re-render when updating with a longer list', () => {
+  const listNotifications = [
     { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } },
+    { id: 2, type: 'urgent', value: 'New resume available' }
   ];
 
-  test('Check the existence of the notifications title Here is the list of notifications', () => {
-    render(<Notifications notifications={mockNotifications} displayDrawer={true} />);
-    const notiftitle = screen.getByText(/Here is the list of notifications/i);
-    expect(notiftitle).toBeInTheDocument();
-  });
+  const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
 
-  test('Check the existence of the button element in the notifications', () => {
-    render(<Notifications notifications={mockNotifications} displayDrawer={true} />);
-    const button = screen.getByRole('button');
-    expect(button).toBeInTheDocument();
-  });
+  const shouldUpdateSpy = jest.spyOn(Notifications.prototype, 'shouldComponentUpdate');
 
-  test('Verify that there are 3 li elements as notifications rendered', () => {
-    render(<Notifications notifications={mockNotifications} displayDrawer={true} />);
-    const lielements = screen.getAllByRole('listitem');
-    expect(lielements.length).toBe(3);
-  });
+  // Met à jour les props avec une liste plus longue
+  const newListNotifications = [
+    { id: 1, type: 'default', value: 'New course available' },
+    { id: 2, type: 'urgent', value: 'New resume available' },
+    { id: 3, type: 'default', value: 'New notification' }
+  ];
 
-  test('Check whether clicking the close button logs Close button has been clicked to the console.', () => {
-    const consolelog = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<Notifications notifications={mockNotifications} displayDrawer={true} />);
-    const button = screen.getByRole('button', { name: /close/i });
+  wrapper.setProps({ listNotifications: newListNotifications });
 
-    fireEvent.click(button);
-    expect(consolelog).toHaveBeenCalledWith('Close button has been clicked');
-    consolelog.mockRestore();
-  });
-
-  test('Clicking on a notification logs the correct message', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<Notifications notifications={mockNotifications} displayDrawer={true} />);
-
-    const listItems = screen.getAllByRole('listitem');
-    fireEvent.click(listItems[1]); // id = 2
-
-    expect(consoleSpy).toHaveBeenCalledWith('Notification 2 has been marked as read');
-    consoleSpy.mockRestore();
-  });
+  // Vérifie que `shouldComponentUpdate` a retourné true
+  expect(shouldUpdateSpy).toHaveReturnedWith(true);
 });
 
-describe('Whenever the prop displayDrawer set to false', () => {
-  test('Check that the Notifications component doesn t displays the elements', () => {
-    const notifications = [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
-    ];
-    render(<Notifications notifications={notifications} displayDrawer={false} />);
-
-    expect(screen.queryByText("Here is the list of notifications")).not.toBeInTheDocument();
-    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-  });
-});
-
-describe('Whenever the the prop displayDrawer set to true', () => {
-  test('Check that the Notifications component displays the elements', () => {
-    const notifications = [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
-    ];
-    render(<Notifications notifications={notifications} displayDrawer={true} />);
-
-    expect(screen.queryByText("Here is the list of notifications")).toBeInTheDocument();
-    expect(screen.queryAllByRole('listitem')).toHaveLength(3);
-    expect(screen.queryByRole('button')).toBeInTheDocument();
-  });
-
-  test('Check that the Notifications component displays the elements', () => {
-    const notifications = [];
-    render(<Notifications notifications={notifications} displayDrawer={true} />);
-    expect(screen.queryByText("No new notification for now")).toBeInTheDocument();
-  });
-});
-
-describe('Notifications re-render optimization (task 7)', () => {
-  afterEach(() => {
-    cleanup();
-    jest.clearAllMocks();
-  });
-
-  test('does not re-render when notifications length does not change', () => {
-    const initial = [
-      { id: 1, type: 'default', value: 'Test 1' }
-    ];
-    const { rerender } = render(<Notifications notifications={initial} displayDrawer={true} />);
-
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    const newProps = [
-      { id: 1, type: 'default', value: 'Updated content' }
-    ];
-    rerender(<Notifications notifications={newProps} displayDrawer={true} />);
-
-    expect(consoleSpy).not.toHaveBeenCalled();
-    consoleSpy.mockRestore();
-  });
-
-  test('does re-render when notifications length increases', () => {
-    const initial = [
-      { id: 1, type: 'default', value: 'Test 1' }
-    ];
-    const { rerender } = render(<Notifications notifications={initial} displayDrawer={true} />);
-
-    const updated = [
-      ...initial,
-      { id: 2, type: 'urgent', value: 'Test 2' }
-    ];
-    rerender(<Notifications notifications={updated} displayDrawer={true} />);
-
-    const items = screen.getAllByRole('listitem');
-    expect(items.length).toBe(2);
-  });
-});
