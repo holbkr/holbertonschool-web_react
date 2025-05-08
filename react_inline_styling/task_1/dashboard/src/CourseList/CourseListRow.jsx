@@ -1,15 +1,17 @@
-import React from 'react';
-import { StyleSheet, css } from 'aphrodite';
+import React from "react";
+
+const rowStyle = { backgroundColor: "#f5f5f5ab" };
+const headerStyle = { backgroundColor: "#deb5b545" };
 
 export default function CourseListRow({ isHeader = false, textFirstCell = "", textSecondCell = null }) {
   return (
-    <tr className={css(isHeader ? styles.headerRow : styles.bodyRow)}>
+    <tr style={isHeader ? headerStyle : rowStyle}>
       {isHeader ? (
         textSecondCell === null ? (
           <th colSpan="2">{textFirstCell}</th>
         ) : (
           <>
-            <th className={css(styles.thLeft)}>{textFirstCell}</th>
+            <th style={{ width: "70%" }}>{textFirstCell}</th>
             <th>{textSecondCell}</th>
           </>
         )
@@ -22,15 +24,3 @@ export default function CourseListRow({ isHeader = false, textFirstCell = "", te
     </tr>
   );
 }
-
-const styles = StyleSheet.create({
-  headerRow: {
-    backgroundColor: 'rgba(222, 181, 181, 0.27)',
-  },
-  bodyRow: {
-    backgroundColor: 'rgba(245, 245, 245, 0.67)',
-  },
-  thLeft: {
-    width: '70%',
-  },
-});
