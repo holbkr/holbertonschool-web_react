@@ -39,7 +39,7 @@ class Notifications extends React.Component {
                   onClick={() => console.log('Close button has been clicked')}
                   aria-label="Close"
                 >
-                  <img src={closebtn} alt="Close" />
+                  <img src={closebtn} alt="Close" className={css(styles.closeIcon)} />
                 </button>
                 <ul className={css(styles.ul)}>
                   {notifications.map((notification) => (
@@ -81,10 +81,18 @@ const styles = StyleSheet.create({
     top: '2.5rem',
     zIndex: 1,
     '@media (max-width: 900px)': {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       width: '100%',
       height: '100%',
+      backgroundColor: 'white',
       fontSize: '20px',
-      padding: '0',
+      padding: '20px',
+      border: 'none',
+      zIndex: 1000,
     },
   },
   panelText: {
@@ -107,6 +115,11 @@ const styles = StyleSheet.create({
     border: 'none',
     background: 'transparent',
     cursor: 'pointer',
+    zIndex: 1001,
+  },
+  closeIcon: {
+    width: '10px',
+    height: '10px',
   },
 });
 

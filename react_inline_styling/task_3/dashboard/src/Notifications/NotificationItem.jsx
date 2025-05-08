@@ -6,7 +6,10 @@ class NotificationItem extends React.PureComponent {
   render() {
     const { type, html, value, id, markAsRead } = this.props;
 
-    const styleClass = type === 'urgent' ? css(styles.urgent) : css(styles.default);
+    const styleClass = css(
+      type === 'urgent' ? styles.urgent : styles.default,
+      styles.responsive
+    );
 
     if (html) {
       return (
@@ -31,23 +34,20 @@ class NotificationItem extends React.PureComponent {
   }
 }
 
-const baseStyle = {
-  '@media (max-width: 900px)': {
-    width: '100%',
-    borderBottom: '1px solid black',
-    fontSize: '20px',
-    padding: '10px 8px',
-  },
-};
-
 const styles = StyleSheet.create({
   default: {
     color: 'blue',
-    ...baseStyle,
   },
   urgent: {
     color: 'red',
-    ...baseStyle,
+  },
+  responsive: {
+    '@media (max-width: 900px)': {
+      width: '100%',
+      borderBottom: '1px solid black',
+      fontSize: '20px',
+      padding: '10px 8px',
+    },
   },
 });
 
