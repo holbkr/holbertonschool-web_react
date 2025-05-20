@@ -21,6 +21,10 @@ class Notifications extends React.Component {
     console.log(`Notification ${id} has been marked as read`);
   }
 
+  handleMarkAsRead = (id) => () => {
+    this.markAsRead(id);
+  };
+
   render() {
     const {
       notifications,
@@ -44,8 +48,13 @@ class Notifications extends React.Component {
               onClick={handleHideDrawer}
               aria-label="Close"
             >
-              <img src={closebtn} alt="Close" className={css(styles.closeIcon)} />
+              <img
+                src={closebtn}
+                alt="Close"
+                className={css(styles.closeIcon)}
+              />
             </button>
+
             {notifications.length > 0 ? (
               <>
                 <p className={css(styles.panelText)}>Here is the list of notifications</p>
@@ -57,7 +66,7 @@ class Notifications extends React.Component {
                       type={notification.type}
                       value={notification.value}
                       html={notification.html}
-                      markAsRead={this.markAsRead}
+                      markAsRead={this.handleMarkAsRead(notification.id)}
                     />
                   ))}
                 </ul>
