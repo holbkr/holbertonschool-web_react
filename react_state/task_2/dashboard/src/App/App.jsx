@@ -9,12 +9,17 @@ import CourseList from '../CourseList/CourseList';
 import { getLatestNotification } from '../utils/utils';
 import { StyleSheet, css } from 'aphrodite';
 import AppContext from '../Context/context';
-import PropTypes from 'prop-types';
-
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.logOut = this.logOut.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
+
     this.state = {
       displayDrawer: false,
       user: {
@@ -22,13 +27,8 @@ class App extends React.Component {
         password: '',
         isLoggedIn: false,
       },
+      logOut: this.logOut,
     };
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
-    this.handleHideDrawer = this.handleHideDrawer.bind(this);
-    this.logIn = this.logIn.bind(this);
-    this.logOut = this.logOut.bind(this);
   }
 
   logIn(email, password) {
@@ -51,27 +51,27 @@ class App extends React.Component {
     });
   }
 
-  handleDisplayDrawer() {
-    this.setState({ displayDrawer: true });
-  }
-
-  handleHideDrawer() {
-    this.setState({ displayDrawer: false });
-  }
-
-  handleKeyDown(event) {
-    if (event.ctrlKey && event.key === 'h') {
-      alert('Logging you out');
-      this.logOut(); // Appel direct de la méthode logOut
-    }
-  }
-
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown(event) {
+    if (event.ctrlKey && event.key === 'h') {
+      alert('Logging you out');
+      this.state.logOut(); // utilise bien le logOut du contexte
+    }
+  }
+
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
   }
 
   render() {
@@ -90,7 +90,7 @@ class App extends React.Component {
     ];
 
     return (
-      <AppContext.Provider value={{ user, logOut: this.logOut }}>
+      <AppContext.Provider value={{ user: this.state.user, logOut: this.state.logOut }}>
         <div className={css(styles.app)}>
           <div className={css(styles.notifications)}>
             <Notifications
@@ -108,7 +108,11 @@ class App extends React.Component {
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Log in to continue">
-                <Login logIn={this.logIn} />
+                <Login
+                  logIn={this.logIn}
+                  email={user.email}
+                  password={user.password}
+                />
               </BodySectionWithMarginBottom>
             )}
             <BodySection title="News from the School">
@@ -141,10 +145,5 @@ const styles = StyleSheet.create({
     minWidth: '30rem',
   },
 });
-
-App.propTypes = {
-  handleDisplayDrawer: PropTypes.func,
-  handleHideDrawer: PropTypes.func,
-};
 
 export default App;
