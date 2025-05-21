@@ -6,10 +6,11 @@ import Login from '../Login/Login';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import CourseList from '../CourseList/CourseList';
-import PropTypes from 'prop-types';
 import { getLatestNotification } from '../utils/utils';
 import { StyleSheet, css } from 'aphrodite';
-import AppContext from '../Context/context'; // ✅ nom clair et cohérent
+import AppContext from '../Context/context';
+import PropTypes from 'prop-types';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -21,7 +22,6 @@ class App extends React.Component {
         password: '',
         isLoggedIn: false,
       },
-      logOut: this.logOut,
     };
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -29,16 +29,6 @@ class App extends React.Component {
     this.handleHideDrawer = this.handleHideDrawer.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
-  }
-
-  logOut() {
-    this.setState({
-      user: {
-        email: '',
-        password: '',
-        isLoggedIn: false,
-      },
-    });
   }
 
   logIn(email, password) {
@@ -51,6 +41,31 @@ class App extends React.Component {
     });
   }
 
+  logOut() {
+    this.setState({
+      user: {
+        email: '',
+        password: '',
+        isLoggedIn: false,
+      },
+    });
+  }
+
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
+  }
+
+  handleKeyDown(event) {
+    if (event.ctrlKey && event.key === 'h') {
+      alert('Logging you out');
+      this.logOut(); // Appel direct de la méthode logOut
+    }
+  }
+
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
   }
@@ -58,21 +73,6 @@ class App extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
-
-  handleKeyDown = (event) => {
-    if (event.ctrlKey && event.key === 'h') {
-      alert('Logging you out');
-      this.state.logOut(); // ✅ utiliser logOut depuis le state
-    }
-  };
-
-  handleDisplayDrawer = () => {
-    this.setState({ displayDrawer: true });
-  };
-
-  handleHideDrawer = () => {
-    this.setState({ displayDrawer: false });
-  };
 
   render() {
     const { displayDrawer, user } = this.state;
@@ -90,7 +90,7 @@ class App extends React.Component {
     ];
 
     return (
-      <AppContext.Provider value={{ user: this.state.user, logOut: this.logOut }}>
+      <AppContext.Provider value={{ user, logOut: this.logOut }}>
         <div className={css(styles.app)}>
           <div className={css(styles.notifications)}>
             <Notifications
@@ -108,11 +108,7 @@ class App extends React.Component {
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Log in to continue">
-                <Login
-                  logIn={this.logIn}
-                  email={user.email}
-                  password={user.password}
-                />
+                <Login logIn={this.logIn} />
               </BodySectionWithMarginBottom>
             )}
             <BodySection title="News from the School">

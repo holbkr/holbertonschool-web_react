@@ -19,7 +19,7 @@ class Login extends React.Component {
   handleLoginSubmit(e) {
     e.preventDefault();
     const { email, password } = this.state;
-    this.props.logIn(email, password); // Appel du logIn du parent
+    this.props.logIn(email, password); // ✅ Login déclenché avec les valeurs de l'état
   }
 
   handleChangeEmail(e) {
