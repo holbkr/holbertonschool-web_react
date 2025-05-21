@@ -8,7 +8,7 @@ import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBot
 import CourseList from '../CourseList/CourseList';
 import { getLatestNotification } from '../utils/utils';
 import { StyleSheet, css } from 'aphrodite';
-import AppContext from '../Context/context';
+import newContext from '../Context/context';
 
 class App extends React.Component {
   constructor(props) {
@@ -90,7 +90,7 @@ class App extends React.Component {
     ];
 
     return (
-      <AppContext.Provider value={{ user: this.state.user, logOut: this.state.logOut }}>
+      <newContext.Provider value={{ user: this.state.user, logOut: this.state.logOut }}>
         <div className={css(styles.app)}>
           <div className={css(styles.notifications)}>
             <Notifications
@@ -121,7 +121,7 @@ class App extends React.Component {
           </div>
           <Footer />
         </div>
-      </AppContext.Provider>
+      </newContext.Provider>
     );
   }
 }
