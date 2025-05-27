@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
+import WithLogging from '../HOC/WithLogging';
 
 function Login({ logIn }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -110,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default WithLogging(Login);
