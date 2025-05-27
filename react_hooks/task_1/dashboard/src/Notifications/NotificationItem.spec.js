@@ -18,16 +18,14 @@ test('li has attribute data-notification-type="default"', () => {
 
   expect(li).toBeInTheDocument();
   expect(li).toHaveAttribute('data-notification-type', 'default');
-  // Aphrodite supprime les styles, donc on ne teste plus la couleur ici
 });
 
 test('li has attribute data-notification-type="urgent"', () => {
   render(<NotificationItem type="urgent" value="Test urgent notification" />);
   const li = screen.getByText('Test urgent notification');
 
-  //expect(li).toBeInTheDocument();
-  //expect(li).toHaveAttribute('data-notification-type', 'urgent');
-  // Aphrodite supprime les styles, donc on ne teste plus la couleur ici
+  expect(li).toBeInTheDocument();
+  expect(li).toHaveAttribute('data-notification-type', 'urgent');
 });
 
 test('calls markAsRead with correct id on click', () => {

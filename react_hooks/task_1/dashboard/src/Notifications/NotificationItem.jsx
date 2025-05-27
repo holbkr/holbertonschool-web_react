@@ -1,37 +1,35 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
 
-class NotificationItem extends React.PureComponent {
-  render() {
-    const { type, html, value, id, markAsRead } = this.props;
+function NotificationItem({ type, html, value, id, markAsRead }) {
+  const styleClass = css(
+    type === 'urgent' ? styles.urgent : styles.default,
+    styles.responsive
+  );
 
-    const styleClass = css(
-      type === 'urgent' ? styles.urgent : styles.default,
-      styles.responsive
-    );
+  const handleClick = () => markAsRead(id);
 
-    if (html) {
-      return (
-        <li
-          data-notification-type={type}
-          className={styleClass}
-          dangerouslySetInnerHTML={html}
-          onClick={() => markAsRead(id)}
-        />
-      );
-    }
-
+  if (html) {
     return (
       <li
         data-notification-type={type}
         className={styleClass}
-        onClick={() => markAsRead(id)}
-      >
-        {value}
-      </li>
+        dangerouslySetInnerHTML={html}
+        onClick={handleClick}
+      />
     );
   }
+
+  return (
+    <li
+      data-notification-type={type}
+      className={styleClass}
+      onClick={handleClick}
+    >
+      {value}
+    </li>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,4 +64,4 @@ NotificationItem.defaultProps = {
   markAsRead: () => {},
 };
 
-export default NotificationItem;
+export default memo(NotificationItem);
