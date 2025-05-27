@@ -30,7 +30,7 @@ function Login({ logIn }) {
       <p>Login to access the full dashboard</p>
       <form onSubmit={handleLoginSubmit}>
         <div className={css(styles.inputGroup)}>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">Email</label>
           <input
             id="email"
             name="email"
@@ -41,7 +41,7 @@ function Login({ logIn }) {
           />
         </div>
         <div className={css(styles.inputGroup)}>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">Password</label>
           <input
             id="password"
             name="password"

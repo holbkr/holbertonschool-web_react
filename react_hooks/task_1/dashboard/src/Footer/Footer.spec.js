@@ -22,7 +22,6 @@ describe('Footer component', () => {
     const expectedText = `Copyright ${year} - ${copy}`;
     expect(screen.getByText(expectedText, { exact: false })).toBeInTheDocument();
 
-    // Vérifie que le message de déconnexion n’apparaît pas
     expect(screen.queryByTestId('logoutSection')).not.toBeInTheDocument();
   });
 
@@ -38,7 +37,9 @@ describe('Footer component', () => {
       </AppContext.Provider>
     );
 
-    const welcomeMessage = screen.getByText(/Welcome test@mail.com/i);
+    const welcomeMessage = screen.getByText((content, element) =>
+      element?.textContent === 'Welcome test@mail.com (logout)'
+    );
     expect(welcomeMessage).toBeInTheDocument();
 
     const logoutLink = screen.getByText('(logout)');

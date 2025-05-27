@@ -48,8 +48,11 @@ test('renders logout section if user is logged in', () => {
       <Header />
     </AppContext.Provider>
   );
-  const logoutText = screen.getByText(/Welcome user@mail.com/i);
+  const logoutText = screen.getByText((content, element) =>
+    element?.textContent === 'Welcome user@mail.com (logout)'
+  );
   expect(logoutText).toBeInTheDocument();
+
   const logoutLink = screen.getByText('(logout)');
   expect(logoutLink).toBeInTheDocument();
 });

@@ -1,65 +1,61 @@
-import React, { PureComponent } from 'react';
+import { memo } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import closebtn from '../assets/close-button.png';
 import NotificationItem from './NotificationItem';
 import PropTypes from 'prop-types';
 
-class Notifications extends PureComponent {
-  render() {
-    const {
-      notifications,
-      displayDrawer,
-      handleDisplayDrawer,
-      handleHideDrawer,
-      markNotificationAsRead,
-    } = this.props;
+function Notifications({
+  notifications,
+  displayDrawer,
+  handleDisplayDrawer,
+  handleHideDrawer,
+  markNotificationAsRead,
+}) {
+  return (
+    <>
+      {!displayDrawer && (
+        <div className={css(styles.menuItem)} onClick={handleDisplayDrawer}>
+          <p className={css(styles.menuText)}>Your notifications</p>
+        </div>
+      )}
 
-    return (
-      <>
-        {!displayDrawer && (
-          <div className={css(styles.menuItem)} onClick={handleDisplayDrawer}>
-            <p className={css(styles.menuText)}>Your notifications</p>
-          </div>
-        )}
+      {displayDrawer && (
+        <div className={css(styles.panel)}>
+          <button
+            className={css(styles.closeBtn)}
+            onClick={handleHideDrawer}
+            aria-label="Close"
+          >
+            <img
+              src={closebtn}
+              alt="Close"
+              className={css(styles.closeIcon)}
+            />
+          </button>
 
-        {displayDrawer && (
-          <div className={css(styles.panel)}>
-            <button
-              className={css(styles.closeBtn)}
-              onClick={handleHideDrawer}
-              aria-label="Close"
-            >
-              <img
-                src={closebtn}
-                alt="Close"
-                className={css(styles.closeIcon)}
-              />
-            </button>
-
-            {notifications.length > 0 ? (
-              <>
-                <p className={css(styles.panelText)}>Here is the list of notifications</p>
-                <ul className={css(styles.ul)}>
-                  {notifications.map((notification) => (
-                    <NotificationItem
-                      key={notification.id}
-                      id={notification.id}
-                      type={notification.type}
-                      value={notification.value}
-                      html={notification.html}
-                      markAsRead={() => markNotificationAsRead(notification.id)}
-                    />
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <p>No new notification for now</p>
-            )}
-          </div>
-        )}
-      </>
-    );
-  }
+          {notifications.length > 0 ? (
+            <>
+              <p className={css(styles.panelText)}>Here is the list of notifications</p>
+              <ul className={css(styles.ul)}>
+                {notifications.map((notification) => (
+                  <NotificationItem
+                    key={notification.id}
+                    id={notification.id}
+                    type={notification.type}
+                    value={notification.value}
+                    html={notification.html}
+                    markAsRead={() => markNotificationAsRead(notification.id)}
+                  />
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p>No new notification for now</p>
+          )}
+        </div>
+      )}
+    </>
+  );
 }
 
 const fade = {
@@ -168,4 +164,4 @@ Notifications.defaultProps = {
   markNotificationAsRead: () => {},
 };
 
-export default Notifications;
+export default memo(Notifications);
