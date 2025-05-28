@@ -72,3 +72,22 @@ test('Submit button is enabled only with valid email and password', () => {
   fireEvent.change(passwordInput, { target: { value: '12345678' } });
   expect(submitBtn).toBeEnabled();
 });
+
+test('calls logIn with email and password when form is submitted', () => {
+  const logInMock = jest.fn();
+  render(<Login logIn={logInMock} />);
+
+  const emailInput = screen.getByLabelText(/email/i);
+  const passwordInput = screen.getByLabelText(/password/i);
+  const submitBtn = screen.getByRole('button', { name: /ok/i });
+
+  // Entrée de données valides
+  fireEvent.change(emailInput, { target: { value: 'test@mail.com' } });
+  fireEvent.change(passwordInput, { target: { value: '12345678' } });
+
+  // Soumission du formulaire
+  fireEvent.click(submitBtn);
+
+  // Vérifie que logIn est bien appelé avec les bonnes valeurs
+  expect(logInMock).toHaveBeenCalledWith('test@mail.com', '12345678');
+});

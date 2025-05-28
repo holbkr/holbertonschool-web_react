@@ -6,41 +6,50 @@ import Login from '../Login/Login';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import CourseList from '../CourseList/CourseList';
-import PropTypes from 'prop-types';
 import { getLatestNotification } from '../utils/utils';
 import { StyleSheet, css } from 'aphrodite';
+import newContext from '../Context/context';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.logOut = this.logOut.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
+
     this.state = {
       displayDrawer: false,
+      user: {
+        email: '',
+        password: '',
+        isLoggedIn: false,
+      },
+      logOut: this.logOut,
     };
   }
 
-  static defaultProps = {
-    logOut: () => {},
-  };
+  logIn(email, password) {
+    this.setState({
+      user: {
+        email,
+        password,
+        isLoggedIn: true,
+      },
+    });
+  }
 
-  static propTypes = {
-    logOut: PropTypes.func,
-    isLoggedIn: PropTypes.bool,
-  };
-
-  handleDisplayDrawer = () => {
-    this.setState({ displayDrawer: true });
-  };
-
-  handleHideDrawer = () => {
-    this.setState({ displayDrawer: false });
-  };
-
-  handleKeyDown = (event) => {
-    if (event.ctrlKey && event.key === 'h') {
-      alert('Logging you out');
-      this.props.logOut();
-    }
-  };
+  logOut() {
+    this.setState({
+      user: {
+        email: '',
+        password: '',
+        isLoggedIn: false,
+      },
+    });
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
@@ -50,39 +59,60 @@ class App extends React.Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
+  handleKeyDown(event) {
+    if (event.ctrlKey && event.key === 'h') {
+      alert('Logging you out');
+      this.state.logOut(); // utilise bien le logOut du contexte
+    }
+  }
+
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
+  }
+
   render() {
+    const { displayDrawer, user } = this.state;
+
     const notificationsList = [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
     ];
+
     const coursesList = [
       { id: 1, name: 'ES6', credit: '60' },
       { id: 2, name: 'Webpack', credit: '20' },
       { id: 3, name: 'React', credit: '40' },
     ];
-    const { isLoggedIn } = this.props;
 
     return (
-      <React.Fragment>
+      <newContext.Provider value={{ user: this.state.user, logOut: this.state.logOut }}>
         <div className={css(styles.app)}>
           <div className={css(styles.notifications)}>
             <Notifications
               notifications={notificationsList}
-              displayDrawer={this.state.displayDrawer}
+              displayDrawer={displayDrawer}
               handleDisplayDrawer={this.handleDisplayDrawer}
               handleHideDrawer={this.handleHideDrawer}
             />
           </div>
           <Header />
           <div className={css(styles.body)}>
-            {isLoggedIn ? (
+            {user.isLoggedIn ? (
               <BodySectionWithMarginBottom title="Course list">
                 <CourseList courses={coursesList} />
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Log in to continue">
-                <Login />
+                <Login
+                  logIn={this.logIn}
+                  email={user.email}
+                  password={user.password}
+                />
               </BodySectionWithMarginBottom>
             )}
             <BodySection title="News from the School">
@@ -91,7 +121,7 @@ class App extends React.Component {
           </div>
           <Footer />
         </div>
-      </React.Fragment>
+      </newContext.Provider>
     );
   }
 }

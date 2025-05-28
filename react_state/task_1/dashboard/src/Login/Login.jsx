@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor(props) {
@@ -8,7 +9,6 @@ class Login extends React.Component {
       email: '',
       password: '',
       enableSubmit: false,
-      isLoggedIn: false,
     };
 
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -18,7 +18,8 @@ class Login extends React.Component {
 
   handleLoginSubmit(e) {
     e.preventDefault();
-    this.setState({ isLoggedIn: true });
+    const { email, password } = this.state;
+    this.props.logIn(email, password); // ✅ Login déclenché avec les valeurs de l'état
   }
 
   handleChangeEmail(e) {
@@ -46,7 +47,7 @@ class Login extends React.Component {
         <p>Login to access the full dashboard</p>
         <form onSubmit={this.handleLoginSubmit}>
           <div className={css(styles.inputGroup)}>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
@@ -56,7 +57,7 @@ class Login extends React.Component {
             />
           </div>
           <div className={css(styles.inputGroup)}>
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
@@ -78,6 +79,14 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  logIn: PropTypes.func,
+};
+
+Login.defaultProps = {
+  logIn: () => {},
+};
 
 const styles = StyleSheet.create({
   body: {
