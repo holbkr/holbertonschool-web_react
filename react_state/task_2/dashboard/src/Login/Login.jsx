@@ -47,7 +47,7 @@ class Login extends React.Component {
         <p>Login to access the full dashboard</p>
         <form onSubmit={this.handleLoginSubmit}>
           <div className={css(styles.inputGroup)}>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
@@ -57,7 +57,7 @@ class Login extends React.Component {
             />
           </div>
           <div className={css(styles.inputGroup)}>
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
