@@ -1,10 +1,22 @@
-import React, { PureComponent } from 'react';
+import { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import closebtn from '../assets/close-button.png';
 import NotificationItem from './NotificationItem';
 import PropTypes from 'prop-types';
 
-class Notifications extends PureComponent {
+class Notifications extends Component {
+  shouldComponentUpdate(nextProps) {
+    if (this.props.notifications.length !== nextProps.notifications.length) {
+      return true;
+    }
+
+    if (this.props.displayDrawer !== nextProps.displayDrawer) {
+      return true;
+    }
+
+    return false;
+  }
+
   render() {
     const {
       notifications,

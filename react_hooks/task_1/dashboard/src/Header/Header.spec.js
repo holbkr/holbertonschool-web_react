@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import Header from './Header';
 import AppContext from '../Context/context';
 import { StyleSheetTestUtils } from 'aphrodite';
@@ -48,10 +48,11 @@ test('renders logout section if user is logged in', () => {
       <Header />
     </AppContext.Provider>
   );
-  const logoutText = screen.getByText(/Welcome user@mail.com/i);
-  expect(logoutText).toBeInTheDocument();
-  const logoutLink = screen.getByText('(logout)');
-  expect(logoutLink).toBeInTheDocument();
+
+  const logoutSection = screen.getByTestId('logoutSection');
+  expect(logoutSection).toBeInTheDocument();
+  expect(logoutSection).toHaveTextContent('Welcome user@mail.com');
+  expect(within(logoutSection).getByText('(logout)')).toBeInTheDocument();
 });
 
 test('calls logOut function when logout link is clicked', () => {

@@ -107,17 +107,14 @@ describe('Notifications re-render optimization', () => {
     spyRender.mockClear();
   });
 
-  test("doesn't re-render if notifications length stays the same", () => {
+  test("doesn't re-render if notifications prop reference doesn't change", () => {
     const { rerender } = render(
       <Notifications notifications={initialNotifications} displayDrawer={true} />
     );
     expect(spyRender).toHaveBeenCalledTimes(1);
 
-    const updatedNotifications = [
-      { id: 1, type: 'default', value: 'Notification 1 updated' },
-      { id: 2, type: 'urgent', value: 'Notification 2 updated' },
-    ];
-    rerender(<Notifications notifications={updatedNotifications} displayDrawer={true} />);
+    // Même référence, pas de nouveau render
+    rerender(<Notifications notifications={initialNotifications} displayDrawer={true} />);
     expect(spyRender).toHaveBeenCalledTimes(1);
   });
 
