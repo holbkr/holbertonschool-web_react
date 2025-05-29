@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import axios from 'axios';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -11,20 +12,9 @@ import { StyleSheet, css } from 'aphrodite';
 import AppContext from '../Context/context';
 
 const App = () => {
-  const notificationsList = useMemo(() => [
-    { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
-  ], []);
-
-  const coursesList = useMemo(() => [
-    { id: 1, name: 'ES6', credit: '60' },
-    { id: 2, name: 'Webpack', credit: '20' },
-    { id: 3, name: 'React', credit: '40' },
-  ], []);
-
   const [displayDrawer, setDisplayDrawer] = useState(false);
-  const [notifications, setNotifications] = useState(notificationsList);
+  const [notifications, setNotifications] = useState([]);
+  const [coursesList, setCoursesList] = useState([]);
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -54,6 +44,41 @@ const App = () => {
 
   const handleDisplayDrawer = () => setDisplayDrawer(true);
   const handleHideDrawer = () => setDisplayDrawer(false);
+
+  // Fetch notifications on initial mount
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await axios.get('/notifications.json');
+        const data = res.data.map((notif) =>
+          notif.id === 3 ? { ...notif, html: { __html: getLatestNotification() } } : notif
+        );
+        setNotifications(data);
+      } catch (err) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to fetch notifications:', err);
+        }
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  // Fetch courses when user logs in or logs out
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get('/courses.json');
+        setCoursesList(res.data);
+      } catch (err) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to fetch courses:', err);
+        }
+      }
+    };
+
+    fetchCourses();
+  }, [user]);
 
   return (
     <AppContext.Provider value={{ user, logOut }}>
