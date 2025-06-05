@@ -93,7 +93,7 @@ export default function App() {
                 markNotificationAsRead={markNotificationAsRead}
             />
             <>
-                <Header user={state.user} logOut={logOut} />
+                <Header />
                 {!state.user.isLoggedIn ? (
                     <BodySectionWithMarginBottom title='Log in to continue'>
                         <Login login={logIn} />
