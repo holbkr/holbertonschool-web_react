@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getLatestNotification } from '../../../utils/utils';
+import { getLatestNotification } from '../../utils/utils';
 
 const API_BASE_URL = 'http://localhost:5173';
 const ENDPOINTS = {
