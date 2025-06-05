@@ -29,12 +29,10 @@ const styles = StyleSheet.create({
 
 export default function Header() {
   const dispatch = useDispatch();
-
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const handleLogout = () => {
     dispatch(logout());
   };
 
@@ -45,9 +43,12 @@ export default function Header() {
       {isLoggedIn && (
         <div className={css(styles.logoutSection)} id="logoutSection">
           Welcome <b>{user.email}</b>{' '}
-          <a href="#" onClick={handleLogout}>
+          <button
+            onClick={handleLogout}
+            style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+          >
             (logout)
-          </a>
+          </button>
         </div>
       )}
     </div>
