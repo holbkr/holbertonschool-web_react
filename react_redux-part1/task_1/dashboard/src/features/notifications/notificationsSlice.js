@@ -12,10 +12,9 @@ export const fetchNotifications = createAsyncThunk(
     const response = await fetch(ENDPOINTS.notifications);
     const data = await response.json();
 
-    // ⚠️ Correction ici : utiliser "html" et non "value"
     const updatedNotifications = data.map((notif) =>
       notif.id === 3
-        ? { ...notif, html: getLatestNotification() }
+        ? { id: notif.id, type: notif.type, html: getLatestNotification() }
         : notif
     );
 
