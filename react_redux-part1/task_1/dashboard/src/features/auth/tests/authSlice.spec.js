@@ -1,4 +1,4 @@
-import authReducer, { login, logout } from '../auth/authSlice';
+import authReducer, { login, logout } from '../authSlice';
 
 describe('authSlice', () => {
   const initialState = {
