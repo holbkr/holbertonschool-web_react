@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
-import { logout } from '../../store/authSlice';
+import { logout } from "../../features/auth/authSlice";
 import logo from '../../assets/holberton-logo.jpg';
 
 const styles = StyleSheet.create({
