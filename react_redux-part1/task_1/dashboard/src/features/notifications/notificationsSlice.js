@@ -12,10 +12,10 @@ export const fetchNotifications = createAsyncThunk(
     const response = await fetch(ENDPOINTS.notifications);
     const data = await response.json();
 
-    // Inject latest notification into notification with id 3
+    // ⚠️ Correction ici : utiliser "html" et non "value"
     const updatedNotifications = data.map((notif) =>
       notif.id === 3
-        ? { ...notif, value: getLatestNotification() }
+        ? { ...notif, html: getLatestNotification() }
         : notif
     );
 
