@@ -1,54 +1,53 @@
-import { StyleSheet, css } from 'aphrodite';
-import holbertonLogo from '../assets/holberton-logo.jpg';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../actions/uiActionCreators';
+import { StyleSheet, css } from "aphrodite";
+import logo from "../../assets/holberton-logo.jpg";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
+const styles = StyleSheet.create({
+  header: {
+    display: "inline-flex",
+    alignItems: "center",
+    fontSize: "20px",
+    fontFamily: "sans-serif",
+  },
+  title: {
+    color: "#e1003c",
+    fontFamily: "'Roboto', sans-serif",
+    fontWeight: "bold",
+    fontSize: "2.5rem",
+    margin: 0,
+  },
+  logo: {
+    height: "30vmin",
+    pointerEvents: "none",
+  },
+  logoutSection: {
+    marginLeft: "auto",
+    fontSize: "1rem",
+  },
+});
 
-const Header = () => {
+export default function Header() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.ui.isUserLoggedIn);
-  const user = useSelector((state) => state.ui.user);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.auth.user);
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
     dispatch(logout());
   };
 
   return (
     <div className={css(styles.header)}>
-      <img src={holbertonLogo} className={css(styles.logo)} alt="holberton logo" />
-      <h1 className={css(styles.title)}>School dashboard</h1>
-
+      <img src={logo} className={css(styles.logo)} alt="holberton logo" />
+      <h1 className={css(styles.title)}>School Dashboard</h1>
       {isLoggedIn && (
-        <section id="logoutSection" className={css(styles.logoutSection)} data-testid="logoutSection">
-          <p>
-            Welcome <strong>{user.email}</strong>{' '}
-            <a href="#" onClick={handleLogout}>(logout)</a>
-          </p>
-        </section>
+        <div className={css(styles.logoutSection)} id="logoutSection">
+          Welcome <b>{user?.email}</b>{" "}
+          <a href="#" onClick={handleLogout}>
+            (logout)
+          </a>
+        </div>
       )}
     </div>
   );
-};
-
-const styles = StyleSheet.create({
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: '3px solid #e1003c',
-    padding: '20px',
-  },
-  logo: {
-    height: '150px',
-    marginRight: '20px',
-  },
-  title: {
-    color: '#e1003c',
-    fontSize: '2rem',
-  },
-  logoutSection: {
-    fontStyle: 'italic',
-    fontSize: '1rem',
-  },
-});
-
-export default Header;
+}

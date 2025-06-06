@@ -1,7 +1,6 @@
-import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import WithLogging from '../HOC/WithLogging';
+import WithLogging from '../../HOC/WithLogging';
 import useLogin from '../hooks/useLogin';
 
 function Login({ logIn }) {
