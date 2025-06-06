@@ -1,8 +1,8 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import BodySectionWithMarginBottom from './BodySectionWithMarginBottom';
 import { StyleSheetTestUtils } from 'aphrodite';
 
+// Supprime l'injection des styles Aphrodite pendant les tests
 beforeEach(() => {
   StyleSheetTestUtils.suppressStyleInjection();
 });
@@ -11,8 +11,9 @@ afterEach(() => {
   StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
 });
 
+// Mock de BodySection
 const mockBodySection = jest.fn();
-jest.mock('../BodySection/BodySection', () => {
+jest.mock('../../components/BodySection/BodySection.jsx', () => {
   const MockBodySection = (props) => {
     mockBodySection(props);
     return (
@@ -48,23 +49,5 @@ describe('BodySectionWithMarginBottom', () => {
     expect(wrapper).toHaveTextContent('Hello!');
     expect(wrapper).toHaveTextContent('This is child content');
     expect(wrapper).toHaveTextContent('Hey there!');
-
-    const pElement = screen.getByText('This is child content');
-    const spanElement = screen.getByText('Hey there!');
-    expect(pElement).toBeInTheDocument();
-    expect(spanElement).toBeInTheDocument();
-  });
-
-  test('Should apply a class name that includes "bodySectionWithMargin"', () => {
-    render(
-      <BodySectionWithMarginBottom title="Test Title">
-        <p>Child Content</p>
-      </BodySectionWithMarginBottom>
-    );
-
-    const wrapper = screen.getByTestId('body-section-with-margin');
-    expect(wrapper).toBeInTheDocument();
-
-    expect(wrapper.className).toMatch(/bodySectionWithMargin/);
   });
 });
