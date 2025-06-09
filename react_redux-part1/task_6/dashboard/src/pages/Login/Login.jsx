@@ -2,7 +2,8 @@ import { StyleSheet, css } from 'aphrodite';
 import WithLogging from '../../components/HOC/WithLogging';
 import useLogin from '../../hooks/useLogin';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/authSlice'; // Assure-toi que ce chemin est correct
+import { login } from '../../features/auth/authSlice';
+
 
 const styles = StyleSheet.create({
   body: {

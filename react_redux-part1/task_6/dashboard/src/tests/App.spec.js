@@ -765,3 +765,63 @@ afterAll(() => {
     console.error = originalError;
     console.warn = originalWarn;
 });
+
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import { login } from '../store/authSlice';
+
+
+const mockStore = configureStore([]);
+let store;
+
+describe('Login form behavior', () => {
+  beforeEach(() => {
+    store = mockStore({
+      auth: {
+        isLoggedIn: false,
+        user: { email: '', password: '' },
+      },
+    });
+
+    store.dispatch = jest.fn();
+  });
+
+  test('submit button enables only when email is valid and password >= 8 chars', () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole('button', { name: /ok/i });
+
+    expect(submitButton).toBeDisabled();
+
+    fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: '12345678' } });
+
+    expect(submitButton).toBeEnabled();
+  });
+
+  test('dispatch login on submit', () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole('button', { name: /ok/i });
+
+    fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: '12345678' } });
+    fireEvent.click(submitButton);
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      login({ email: 'user@example.com', password: '12345678' })
+    );
+  });
+});
