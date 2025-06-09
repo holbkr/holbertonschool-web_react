@@ -17,7 +17,10 @@ const notificationsSlice = createSlice({
     },
     markAsRead: (state, action) => {
       const id = action.payload;
-      state.notifications = state.notifications.filter((notif) => notif.id !== id);
+      // on ne supprime pas la notification, on la marque comme lue si tu veux la garder
+      state.notifications = state.notifications.map((notif) =>
+        notif.id === id ? { ...notif, isRead: true } : notif
+      );
     },
     setNotifications: (state, action) => {
       state.notifications = action.payload;
