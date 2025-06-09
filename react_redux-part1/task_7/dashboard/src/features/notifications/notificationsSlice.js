@@ -1,61 +1,41 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getLatestNotification } from '../../utils/utils';
-
-const API_BASE_URL = 'http://localhost:5173';
-const ENDPOINTS = {
-  notifications: `${API_BASE_URL}/notifications.json`,
-};
-
-export const fetchNotifications = createAsyncThunk(
-  'notifications/fetchNotifications',
-  async () => {
-    const response = await fetch(ENDPOINTS.notifications);
-    const data = await response.json();
-
-    const updatedNotifications = data.map((notif) =>
-      notif.id === 3
-        ? { id: 3, type: notif.type, html: getLatestNotification() }
-        : notif
-    );
-
-    return updatedNotifications;
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   notifications: [],
-  displayDrawer: true,
+  displayDrawer: false,
 };
 
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    markNotificationAsRead: (state, action) => {
-      const idToRemove = action.payload;
-      console.log(`Notification ${idToRemove} has been marked as read`);
-      state.notifications = state.notifications.filter(
-        (notif) => notif.id !== idToRemove
-      );
-    },
-    showDrawer: (state) => {
+    showNotificationDrawer: (state) => {
       state.displayDrawer = true;
     },
-    hideDrawer: (state) => {
+    hideNotificationDrawer: (state) => {
       state.displayDrawer = false;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchNotifications.fulfilled, (state, action) => {
-      state.notifications = action.payload;
-    });
+    markAsRead: (state, action) => {
+      const id = action.payload;
+      // on ne supprime pas la notification, on la marque comme lue si tu veux la garder
+      state.notifications = state.notifications.map((notif) =>
+        notif.id === id ? { ...notif, isRead: true } : notif
+      );
+    },
+    setNotifications: (state, action) => {
+      state.notifications = action.payload.map((notif) => ({
+        ...notif,
+        isRead: notif.isRead ?? false, // ajoute isRead si manquant
+      }));
+    },
   },
 });
 
 export const {
-  markNotificationAsRead,
-  showDrawer,
-  hideDrawer,
+  showNotificationDrawer,
+  hideNotificationDrawer,
+  markAsRead,
+  setNotifications,
 } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;
