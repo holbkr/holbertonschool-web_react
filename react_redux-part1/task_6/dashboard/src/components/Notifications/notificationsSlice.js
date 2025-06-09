@@ -23,7 +23,10 @@ const notificationsSlice = createSlice({
       );
     },
     setNotifications: (state, action) => {
-      state.notifications = action.payload;
+      state.notifications = action.payload.map((notif) => ({
+        ...notif,
+        isRead: notif.isRead ?? false, // ajoute isRead si manquant
+      }));
     },
   },
 });
