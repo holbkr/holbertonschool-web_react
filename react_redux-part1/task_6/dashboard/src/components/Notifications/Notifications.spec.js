@@ -5,10 +5,10 @@ import Notifications from './Notifications';
 import { getLatestNotification } from '../../utils/utils';
 import { StyleSheetTestUtils } from 'aphrodite';
 import {
-  displayDrawer as showDrawer,
-  hideDrawer,
+  showNotificationDrawer as showDrawer,
+  hideNotificationDrawer as hideDrawer,
   markAsRead,
-} from '../../actions/notificationActionCreators';
+} from '../../features/notifications/notificationsSlice';
 
 const mockStore = configureStore([]);
 
