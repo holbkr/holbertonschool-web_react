@@ -13,12 +13,12 @@ describe('Header with Redux', () => {
   test('should not render logout section when not logged in', () => {
     renderWithRedux(<Header />, {
       preloadedState: {
-        auth: { user: {}, isLoggedIn: false },
+        auth: { user: null, isLoggedIn: false },
       },
     });
 
-    // The logout section should not exist at all when not logged in
-    expect(screen.queryByText(/Welcome/i)).not.toBeInTheDocument();
+    // The word "Welcome" should not appear when not logged in
+    expect(screen.queryByText(/Welcome/)).toBeNull();
   });
 
   test('should render logout section with email when logged in', () => {
