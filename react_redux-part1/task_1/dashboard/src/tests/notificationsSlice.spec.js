@@ -6,7 +6,7 @@ import reducer, {
 } from '../../features/notifications/notificationsSlice';
 import { getLatestNotification } from '../../../utils/utils';
 
-// Mock getLatestNotification
+// Mock de la fonction getLatestNotification
 jest.mock('../../../utils/utils', () => ({
   getLatestNotification: jest.fn(() => '<strong>Urgent requirement</strong>'),
 }));
@@ -16,6 +16,10 @@ describe('notificationsSlice', () => {
     notifications: [],
     displayDrawer: true,
   };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should return the initial state', () => {
     expect(reducer(undefined, { type: '@@INIT' })).toEqual(initialState);
@@ -59,10 +63,17 @@ describe('notificationsSlice', () => {
       })
     );
 
-    const action = await fetchNotifications();
-    const result = await reducer(initialState, fetchNotifications.fulfilled(action.payload));
-    expect(result.notifications).toHaveLength(3);
-    expect(result.notifications.find((n) => n.id === 3).html).toEqual({
+    // Appel du thunk
+    const thunkAction = await fetchNotifications();
+    const fulfilledAction = {
+      type: fetchNotifications.fulfilled.type,
+      payload: thunkAction.payload,
+    };
+
+    const newState = reducer(initialState, fulfilledAction);
+
+    expect(newState.notifications).toHaveLength(3);
+    expect(newState.notifications.find((n) => n.id === 3).html).toEqual({
       __html: '<strong>Urgent requirement</strong>',
     });
   });
