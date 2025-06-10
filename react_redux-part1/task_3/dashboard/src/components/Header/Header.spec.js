@@ -17,7 +17,8 @@ describe('Header with Redux', () => {
       },
     });
 
-    const logoutSection = screen.queryByTestId('logoutSection');
+    // Use getElementById instead of queryByTestId since the component uses id, not data-testid
+    const logoutSection = document.getElementById('logoutSection');
     expect(logoutSection).not.toBeInTheDocument();
   });
 
