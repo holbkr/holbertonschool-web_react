@@ -1,38 +1,55 @@
-import reducer, { fetchCourses } from '../courses/coursesSlice';
-import { logout } from '../auth/authSlice';
+import reducer, { fetchCourses } from "../courses/coursesSlice";
+import { logout } from "../auth/authSlice";
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
 
-describe('coursesSlice', () => {
-  const initialState = {
-    courses: [],
-  };
+const mock = new MockAdapter(axios);
 
-  it('should return the initial state by default', () => {
-    expect(reducer(undefined, { type: undefined })).toEqual(initialState);
+const initialState = {
+  courses: [],
+};
+
+describe("coursesSlice", () => {
+  afterEach(() => {
+    mock.reset();
   });
 
-  it('should handle fetchCourses.fulfilled', () => {
-    const courses = [
-      { id: 1, name: 'React Basics' },
-      { id: 2, name: 'Redux Advanced' },
+  it("should return the initial state by default", () => {
+    const nextState = reducer(undefined, { type: undefined });
+    expect(nextState).toEqual(initialState);
+  });
+
+  it("should fetch courses data successfully", async () => {
+    const mockCourses = [
+      { id: 1, name: "Math" },
+      { id: 2, name: "Science" },
     ];
 
-    const action = {
+    mock.onGet("http://localhost:5173/courses.json").reply(200, mockCourses);
+
+    const dispatch = jest.fn();
+    const getState = () => ({});
+    const thunkAction = fetchCourses();
+
+    const result = await thunkAction(dispatch, getState, undefined);
+    const fulfilledAction = {
       type: fetchCourses.fulfilled.type,
-      payload: courses,
+      payload: mockCourses,
     };
 
-    const state = reducer(initialState, action);
-    expect(state.courses).toEqual(courses);
+    const nextState = reducer(initialState, fulfilledAction);
+    expect(nextState.courses).toEqual(mockCourses);
   });
 
-  it('should reset courses on logout', () => {
-    const loggedInState = {
+  it("should reset the courses state to empty on logout", () => {
+    const currentState = {
       courses: [
-        { id: 1, name: 'React Basics' },
+        { id: 1, name: "Math" },
+        { id: 2, name: "Science" },
       ],
     };
 
-    const state = reducer(loggedInState, logout());
-    expect(state).toEqual(initialState);
+    const nextState = reducer(currentState, logout());
+    expect(nextState).toEqual(initialState);
   });
 });
