@@ -17,9 +17,8 @@ describe('Header with Redux', () => {
       },
     });
 
-    // Use getElementById instead of queryByTestId since the component uses id, not data-testid
-    const logoutSection = document.getElementById('logoutSection');
-    expect(logoutSection).not.toBeInTheDocument();
+    // The logout section should not exist at all when not logged in
+    expect(screen.queryByText(/Welcome/i)).not.toBeInTheDocument();
   });
 
   test('should render logout section with email when logged in', () => {
