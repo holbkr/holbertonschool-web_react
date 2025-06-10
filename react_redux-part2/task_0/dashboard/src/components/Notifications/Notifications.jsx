@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
 import closeIcon from '../../assets/close-icon.png';
@@ -52,12 +52,10 @@ const styles = StyleSheet.create({
 const Notifications = memo(function Notifications() {
   const dispatch = useDispatch();
   const notifications = useSelector((state) => state.notifications.notifications);
-  const drawerRef = useRef(null);
+  const [hidden, setHidden] = useState(true); // true = caché
 
   const handleToggleDrawer = () => {
-    if (drawerRef.current) {
-      drawerRef.current.classList.toggle(css(styles.visible));
-    }
+    setHidden((prev) => !prev);
   };
 
   return (
@@ -65,7 +63,7 @@ const Notifications = memo(function Notifications() {
       <div className={css(styles.menuItem)} onClick={handleToggleDrawer}>
         Your notifications
       </div>
-      <div ref={drawerRef} className={css(styles.notifications)}>
+      <div className={`${css(styles.notifications)} ${hidden ? css(styles.visible) : ''}`}>
         {notifications.length > 0 ? (
           <>
             <p>Here is the list of notifications</p>
