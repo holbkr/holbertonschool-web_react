@@ -14,7 +14,7 @@ export const fetchNotifications = createAsyncThunk(
 
     const updatedNotifications = data.map((notif) =>
       notif.id === 3
-        ? { id: 3, type: notif.type, html: getLatestNotification() }
+        ? { ...notif, html: { __html: getLatestNotification() } }
         : notif
     );
 
