@@ -1,9 +1,15 @@
 import reducer, {
+  fetchNotifications,
   markNotificationAsRead,
   showDrawer,
   hideDrawer,
-  fetchNotifications,
-} from '../notifications/notificationsSlice';
+} from '../../features/notifications/notificationsSlice';
+import { getLatestNotification } from '../../../utils/utils';
+
+// Mock de la fonction getLatestNotification
+jest.mock('../../../utils/utils', () => ({
+  getLatestNotification: jest.fn(() => '<strong>Urgent requirement</strong>'),
+}));
 
 describe('notificationsSlice', () => {
   const initialState = {
@@ -11,45 +17,64 @@ describe('notificationsSlice', () => {
     displayDrawer: true,
   };
 
-  it('should return the initial state by default', () => {
-    expect(reducer(undefined, { type: undefined })).toEqual(initialState);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should handle showDrawer', () => {
-    const state = reducer({ ...initialState, displayDrawer: false }, showDrawer());
-    expect(state.displayDrawer).toBe(true);
+  it('should return the initial state', () => {
+    expect(reducer(undefined, { type: '@@INIT' })).toEqual(initialState);
   });
 
-  it('should handle hideDrawer', () => {
-    const state = reducer({ ...initialState, displayDrawer: true }, hideDrawer());
-    expect(state.displayDrawer).toBe(false);
+  it('should handle showDrawer action', () => {
+    const newState = reducer({ ...initialState, displayDrawer: false }, showDrawer());
+    expect(newState.displayDrawer).toBe(true);
   });
 
-  it('should handle markNotificationAsRead', () => {
+  it('should handle hideDrawer action', () => {
+    const newState = reducer({ ...initialState, displayDrawer: true }, hideDrawer());
+    expect(newState.displayDrawer).toBe(false);
+  });
+
+  it('should remove a notification with markNotificationAsRead', () => {
     const stateWithNotifications = {
-      ...initialState,
       notifications: [
-        { id: 1, type: 'default', value: 'New course available' },
-        { id: 2, type: 'urgent', value: 'New resume available' },
+        { id: 1, type: 'default', value: 'Test notification' },
+        { id: 2, type: 'urgent', value: 'Another notification' },
       ],
+      displayDrawer: true,
     };
-    const action = markNotificationAsRead(2);
-    const state = reducer(stateWithNotifications, action);
-    expect(state.notifications).toHaveLength(1);
-    expect(state.notifications[0].id).toBe(1);
+
+    const newState = reducer(stateWithNotifications, markNotificationAsRead(2));
+    expect(newState.notifications).toEqual([
+      { id: 1, type: 'default', value: 'Test notification' },
+    ]);
   });
 
-  it('should handle fetchNotifications.fulfilled', () => {
-    const notifications = [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: '<strong>Urgent requirement</strong> - complete by EOD' }
+  it('should fetch notifications and inject html for notification with id 3', async () => {
+    const mockNotifications = [
+      { id: 1, type: 'default', value: 'Notification 1' },
+      { id: 2, type: 'urgent', value: 'Notification 2' },
+      { id: 3, type: 'urgent', html: { __html: 'Old content' } },
     ];
-    const action = {
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockNotifications),
+      })
+    );
+
+    // Appel du thunk
+    const thunkAction = await fetchNotifications();
+    const fulfilledAction = {
       type: fetchNotifications.fulfilled.type,
-      payload: notifications,
+      payload: thunkAction.payload,
     };
-    const state = reducer(initialState, action);
-    expect(state.notifications).toEqual(notifications);
+
+    const newState = reducer(initialState, fulfilledAction);
+
+    expect(newState.notifications).toHaveLength(3);
+    expect(newState.notifications.find((n) => n.id === 3).html).toEqual({
+      __html: '<strong>Urgent requirement</strong>',
+    });
   });
 });
