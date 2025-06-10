@@ -7,8 +7,14 @@ export default function Footer() {
 
   return (
     <div className={css(styles.footer)}>
-      <p>Copyright {getCurrentYear()} - {getFooterCopy(true)}</p>
-      {isLoggedIn && <a href="#">Contact us</a>}
+      <p>
+        Copyright {getCurrentYear()} - {getFooterCopy(true)}
+      </p>
+      {isLoggedIn && (
+        <p>
+          <a href="#" data-testid="contact-link">Contact us</a>
+        </p>
+      )}
     </div>
   );
 }
@@ -16,6 +22,7 @@ export default function Footer() {
 const styles = StyleSheet.create({
   footer: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     fontStyle: 'italic',
