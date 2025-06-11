@@ -18,10 +18,8 @@ afterEach(() => {
 
 const renderWithRedux = (ui, { initialState } = {}) => {
   const store = mockStore(initialState);
-  return {
-    ...render(<Provider store={store}>{ui}</Provider>),
-    store,
-  };
+  const utils = render(<Provider store={store}>{ui}</Provider>);
+  return { ...utils, store };
 };
 
 const mockNotifications = [
@@ -32,7 +30,7 @@ const mockNotifications = [
 
 describe('Notifications component', () => {
   test('Displays title, close button, and list items when visible', () => {
-    renderWithRedux(<Notifications />, {
+    const { container } = renderWithRedux(<Notifications />, {
       initialState: {
         notifications: {
           notifications: mockNotifications,
@@ -45,6 +43,9 @@ describe('Notifications component', () => {
     expect(screen.getByText(/here is the list of notifications/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
+
+    const panel = container.querySelector('[data-testid="notifications-panel"]');
+    expect(panel.className).toMatch(/visible/);
   });
 
   test('Displays "No new notifications" when list is empty', () => {
@@ -57,7 +58,6 @@ describe('Notifications component', () => {
     });
 
     fireEvent.click(screen.getByText(/your notifications/i));
-
     expect(screen.getByText(/no new notifications for now/i)).toBeInTheDocument();
   });
 
@@ -78,7 +78,7 @@ describe('Notifications component', () => {
   });
 
   test('Toggles visibility of notifications drawer with CSS class', () => {
-    renderWithRedux(<Notifications />, {
+    const { container } = renderWithRedux(<Notifications />, {
       initialState: {
         notifications: {
           notifications: mockNotifications,
@@ -89,12 +89,12 @@ describe('Notifications component', () => {
     const toggle = screen.getByText(/your notifications/i);
     fireEvent.click(toggle); // Open
 
-    const notifText = screen.getByText(/here is the list of notifications/i);
-    expect(notifText.closest('div').className).toMatch(/visible/);
+    const panel = container.querySelector('[data-testid="notifications-panel"]');
+    expect(panel.className).toMatch(/visible/);
 
     const closeBtn = screen.getByLabelText(/close/i);
     fireEvent.click(closeBtn); // Close
-    expect(notifText.closest('div').className).not.toMatch(/visible/);
+    expect(panel.className).not.toMatch(/visible/);
   });
 
   test('Component is memoized', () => {

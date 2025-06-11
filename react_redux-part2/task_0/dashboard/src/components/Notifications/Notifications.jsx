@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite';
 import closeIcon from '../../assets/close-icon.png';
@@ -39,20 +39,20 @@ const styles = StyleSheet.create({
 const Notifications = memo(function Notifications() {
   const dispatch = useDispatch();
   const notifications = useSelector((state) => state.notifications.notifications);
-  const notifRef = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-  const toggleDrawer = () => {
-    if (notifRef.current) {
-      notifRef.current.classList.toggle(css(styles.visible));
-    }
-  };
+  const toggleDrawer = () => setVisible((v) => !v);
 
   return (
     <>
       <div className={css(styles.menuItem)} onClick={toggleDrawer}>
         Your notifications
       </div>
-      <div ref={notifRef} className={`${css(styles.notifications)}`}>
+
+      <div
+        className={`${css(styles.notifications)} ${visible ? css(styles.visible) : ''}`}
+        data-testid="notifications-panel"
+      >
         {notifications.length > 0 ? (
           <>
             <p>Here is the list of notifications</p>
@@ -64,14 +64,14 @@ const Notifications = memo(function Notifications() {
               <img src={closeIcon} alt="close icon" />
             </button>
             <ul>
-              {notifications.map((notification) => (
+              {notifications.map((n) => (
                 <NotificationItem
-                  key={notification.id}
-                  id={notification.id}
-                  type={notification.type}
-                  value={notification.value}
-                  html={notification.html}
-                  markAsRead={() => dispatch(markAsRead(notification.id))}
+                  key={n.id}
+                  id={n.id}
+                  type={n.type}
+                  value={n.value}
+                  html={n.html}
+                  markAsRead={() => dispatch(markAsRead(n.id))}
                 />
               ))}
             </ul>
