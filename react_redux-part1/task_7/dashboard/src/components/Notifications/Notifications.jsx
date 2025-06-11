@@ -1,51 +1,45 @@
 import { memo } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import { useSelector, useDispatch } from 'react-redux';
 import closeIcon from '../../assets/close-icon.png';
 import NotificationItem from '../NotificationItem/NotificationItem';
-import {
-  markAsRead,
-  setDisplayDrawer
-} from '../../actions/notificationActionCreators';
 
 const styles = StyleSheet.create({
   notificationTitle: {
-    float: 'right',
-    position: 'absolute',
-    right: '10px',
-    top: '2px',
-    cursor: 'pointer',
+    //float: 'right',
+    //position: 'absolute',
+    //right: '10px',
+    //top: '2px',
+    //cursor: 'pointer',
   },
   notifications: {
-    border: 'dotted',
-    borderColor: 'crimson',
-    marginTop: '1%',
-    paddingLeft: '1rem',
-    marginBottom: '1rem',
-    width: '40%',
-    marginLeft: '59%',
+    //border: 'dotted',
+    //borderColor: 'crimson',
+    //marginTop: '1%',
+    //paddingLeft: '1rem',
+    //marginBottom: '1rem',
+    //width: '40%',
+    //marginLeft: '59%',
   },
   notificationsButton: {
-    position: 'absolute',
-    cursor: 'pointer',
-    right: '5px',
-    top: '20px',
-    background: 'transparent',
-    border: 'none',
+    //position: 'absolute',
+    //cursor: 'pointer',
+    //right: '5px',
+    //top: '20px',
+    //background: 'transparent',
+    //border: 'none',
   },
   notificationTypeDefault: {
-    color: 'blue',
+    //color: 'blue',
   },
   notificationTypeUrgent: {
-    color: 'red',
+    //color: 'red',
   },
   menuItem: {
     textAlign: 'right',
   },
 });
 
-// Composant de présentation
-export const NotificationsUI = memo(function NotificationsUI({
+const Notifications = memo(function Notifications({
   displayDrawer,
   handleDisplayDrawer,
   handleHideDrawer,
@@ -54,18 +48,11 @@ export const NotificationsUI = memo(function NotificationsUI({
 }) {
   return (
     <>
-      <div
-        className={css(styles.notificationTitle)}
-        onClick={handleDisplayDrawer}
-        data-testid="menuItem"
-      >
+      <div className={css(styles.notificationTitle)} onClick={handleDisplayDrawer}>
         Your notifications
       </div>
       {displayDrawer && (
-        <div
-          className={css(styles.notifications)}
-          data-testid="notificationsPanel"
-        >
+        <div className={css(styles.notifications)}>
           {notifications.length > 0 ? (
             <>
               <p>Here is the list of notifications</p>
@@ -73,7 +60,6 @@ export const NotificationsUI = memo(function NotificationsUI({
                 onClick={handleHideDrawer}
                 aria-label="Close"
                 className={css(styles.notificationsButton)}
-                data-testid="closeButton"
               >
                 <img src={closeIcon} alt="close icon" />
               </button>
@@ -85,7 +71,7 @@ export const NotificationsUI = memo(function NotificationsUI({
                     type={notification.type}
                     value={notification.value}
                     html={notification.html}
-                    markAsRead={markNotificationAsRead}
+                    markAsRead={() => markNotificationAsRead(notification.id)}
                     className={
                       notification.type === 'urgent'
                         ? css(styles.notificationTypeUrgent)
@@ -103,41 +89,5 @@ export const NotificationsUI = memo(function NotificationsUI({
     </>
   );
 });
-
-// Composant conteneur connecté à Redux
-function Notifications() {
-  const dispatch = useDispatch();
-  const notifications = useSelector(state => state.notifications.notifications || []);
-  const displayDrawer = useSelector(state => state.notifications.displayDrawer);
-  const filter = useSelector(state => state.notifications.filter || 'DEFAULT');
-
-  // Filtrer les notifications selon le filtre actuel
-  const filteredNotifications = filter === 'URGENT'
-    ? notifications.filter(notif => notif.type === 'urgent')
-    : notifications;
-
-  // Handlers pour les actions Redux
-  const handleDisplayDrawer = () => {
-    dispatch(setDisplayDrawer(true));
-  };
-
-  const handleHideDrawer = () => {
-    dispatch(setDisplayDrawer(false));
-  };
-
-  const handleMarkNotificationAsRead = (id) => {
-    dispatch(markAsRead(id));
-  };
-
-  return (
-    <NotificationsUI
-      displayDrawer={displayDrawer}
-      handleDisplayDrawer={handleDisplayDrawer}
-      handleHideDrawer={handleHideDrawer}
-      notifications={filteredNotifications}
-      markNotificationAsRead={handleMarkNotificationAsRead}
-    />
-  );
-}
 
 export default Notifications;
