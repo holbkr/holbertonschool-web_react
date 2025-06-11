@@ -7,37 +7,37 @@ import { markAsRead, showDrawer, hideDrawer } from '../../redux/notificationSlic
 
 const styles = StyleSheet.create({
   notificationTitle: {
-    float: 'right',
-    position: 'absolute',
-    right: '10px',
-    top: '2px',
-    cursor: 'pointer',
+    //float: 'right',
+    //position: 'absolute',
+    //right: '10px',
+    //top: '2px',
+    //cursor: 'pointer',
   },
   notifications: {
-    border: 'dotted',
-    borderColor: 'crimson',
-    marginTop: '1%',
-    paddingLeft: '1rem',
-    marginBottom: '1rem',
-    width: '40%',
-    marginLeft: '59%',
+    //border: 'dotted',
+    //borderColor: 'crimson',
+    //marginTop: '1%',
+    //paddingLeft: '1rem',
+    //marginBottom: '1rem',
+    //width: '40%',
+    //marginLeft: '59%',
   },
   notificationsButton: {
-    position: 'absolute',
-    cursor: 'pointer',
-    right: '5px',
-    top: '20px',
-    background: 'transparent',
-    border: 'none',
+    //position: 'absolute',
+    //cursor: 'pointer',
+    //right: '5px',
+    //top: '20px',
+    //background: 'transparent',
+    //border: 'none',
   },
   notificationTypeDefault: {
-    color: 'blue',
+    //color: 'blue',
   },
   notificationTypeUrgent: {
-    color: 'red',
+    //color: 'red',
   },
   menuItem: {
-    textAlign: 'right',
+    //textAlign: 'right',
   },
 });
 
