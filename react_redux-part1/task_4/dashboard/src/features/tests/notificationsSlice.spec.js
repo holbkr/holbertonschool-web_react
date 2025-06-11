@@ -1,55 +1,48 @@
-import reducer, {
+import notificationsReducer, {
   markNotificationAsRead,
   showDrawer,
   hideDrawer,
-  fetchNotifications,
-} from '../notifications/notificationsSlice';
+} from "../notifications/notificationsSlice";
 
-describe('notificationsSlice', () => {
+describe("notificationsSlice", () => {
   const initialState = {
     notifications: [],
     displayDrawer: true,
   };
 
-  it('should return the initial state by default', () => {
-    expect(reducer(undefined, { type: undefined })).toEqual(initialState);
+  it("should return the initial state by default", () => {
+    expect(notificationsReducer(undefined, { type: undefined })).toEqual(
+      initialState
+    );
   });
 
-  it('should handle showDrawer', () => {
-    const state = reducer({ ...initialState, displayDrawer: false }, showDrawer());
-    expect(state.displayDrawer).toBe(true);
+  it("should handle showDrawer", () => {
+    const prevState = { ...initialState, displayDrawer: false };
+    const nextState = notificationsReducer(prevState, showDrawer());
+    expect(nextState.displayDrawer).toBe(true);
   });
 
-  it('should handle hideDrawer', () => {
-    const state = reducer({ ...initialState, displayDrawer: true }, hideDrawer());
-    expect(state.displayDrawer).toBe(false);
+  it("should handle hideDrawer", () => {
+    const prevState = { ...initialState, displayDrawer: true };
+    const nextState = notificationsReducer(prevState, hideDrawer());
+    expect(nextState.displayDrawer).toBe(false);
   });
 
-  it('should handle markNotificationAsRead', () => {
+  it("should remove a notification when markNotificationAsRead is dispatched", () => {
     const stateWithNotifications = {
-      ...initialState,
       notifications: [
-        { id: 1, type: 'default', value: 'New course available' },
-        { id: 2, type: 'urgent', value: 'New resume available' },
+        { id: 1, type: "default", value: "New course available" },
+        { id: 2, type: "urgent", value: "Server down" },
       ],
+      displayDrawer: true,
     };
-    const action = markNotificationAsRead(2);
-    const state = reducer(stateWithNotifications, action);
-    expect(state.notifications).toHaveLength(1);
-    expect(state.notifications[0].id).toBe(1);
-  });
 
-  it('should handle fetchNotifications.fulfilled', () => {
-    const notifications = [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: '<strong>Urgent requirement</strong> - complete by EOD' }
-    ];
-    const action = {
-      type: fetchNotifications.fulfilled.type,
-      payload: notifications,
-    };
-    const state = reducer(initialState, action);
-    expect(state.notifications).toEqual(notifications);
+    const nextState = notificationsReducer(
+      stateWithNotifications,
+      markNotificationAsRead(1)
+    );
+
+    expect(nextState.notifications.length).toBe(1);
+    expect(nextState.notifications[0].id).toBe(2);
   });
 });

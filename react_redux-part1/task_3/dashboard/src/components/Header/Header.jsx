@@ -2,6 +2,7 @@ import { StyleSheet, css } from "aphrodite";
 import logo from "../../assets/holberton-logo.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
+
 const styles = StyleSheet.create({
   header: {
     display: "inline-flex",
@@ -42,10 +43,8 @@ export default function Header() {
       <h1 className={css(styles.title)}>School Dashboard</h1>
       {isLoggedIn && (
         <div className={css(styles.logoutSection)} id="logoutSection">
-          Welcome <b>{user?.email}</b>{" "}
-          <a href="#" onClick={handleLogout}>
-            (logout)
-          </a>
+          Welcome <strong>{user?.email}</strong>{" "}
+          (<a href="#logout" onClick={handleLogout}>logout</a>)
         </div>
       )}
     </div>

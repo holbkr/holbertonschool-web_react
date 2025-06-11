@@ -6,9 +6,15 @@ export default function Footer() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
-    <div className={css(styles.footer)}>
-      <p>Copyright {getCurrentYear()} - {getFooterCopy(true)}</p>
-      {isLoggedIn && <a href="#">Contact us</a>}
+    <div className={css(styles.footer)} id="footer">
+      <p>
+        Copyright {getCurrentYear()} - {getFooterCopy(true)}
+      </p>
+      {isLoggedIn && (
+        <p id="logoutSection">
+          <a href="#" data-testid="contact-link">Contact us</a>
+        </p>
+      )}
     </div>
   );
 }
@@ -16,6 +22,7 @@ export default function Footer() {
 const styles = StyleSheet.create({
   footer: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     fontStyle: 'italic',
