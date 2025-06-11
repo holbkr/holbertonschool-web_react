@@ -1,30 +1,54 @@
-import React from 'react';
-import { css } from 'aphrodite';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCourses } from '../../features/courses/coursesSlice';
+import CourseListRow from './CourseListRow/CourseListRow';
+import WithLogging from '../../components/HOC/WithLogging';
 
-function CourseListRow({ isHeader, textFirstCell, textSecondCell, style }) {
-  if (isHeader) {
-    if (textSecondCell === null || textSecondCell === undefined) {
-      return (
-        <tr>
-          <th className={css(style)} colSpan="2">{textFirstCell}</th>
-        </tr>
-      );
-    } else {
-      return (
-        <tr>
-          <th className={css(style)}>{textFirstCell}</th>
-          <th className={css(style)}>{textSecondCell}</th>
-        </tr>
-      );
-    }
-  } else {
-    return (
-      <tr>
-        <td className={css(style)}>{textFirstCell}</td>
-        <td className={css(style)}>{textSecondCell}</td>
-      </tr>
-    );
-  }
+function CourseList() {
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.courses.courses);
+
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
+  return (
+    <div>
+      <table id="CourseList">
+        <thead>
+          {courses.length > 0 ? (
+            <>
+              <CourseListRow
+                textFirstCell="Available courses"
+                isHeader={true}
+              />
+              <CourseListRow
+                textFirstCell="Course name"
+                textSecondCell="Credit"
+                isHeader={true}
+              />
+            </>
+          ) : (
+            <CourseListRow
+              isHeader={true}
+              textFirstCell="No course available yet"
+            />
+          )}
+        </thead>
+        {courses.length > 0 && (
+          <tbody>
+            {courses.map((course) => (
+              <CourseListRow
+                key={course.id}
+                textFirstCell={course.name}
+                textSecondCell={course.credit}
+              />
+            ))}
+          </tbody>
+        )}
+      </table>
+    </div>
+  );
 }
 
-export default CourseListRow;
+export default WithLogging(CourseList);

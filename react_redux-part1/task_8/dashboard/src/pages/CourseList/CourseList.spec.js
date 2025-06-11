@@ -1,60 +1,97 @@
 import { render, screen } from '@testing-library/react';
-import CourseList from '../../pages/CourseList/CourseList';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+import CourseList from './CourseList';
 import { StyleSheetTestUtils } from 'aphrodite';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from '../../features/auth/authSlice';
+import coursesReducer from '../../features/courses/coursesSlice';
+import notificationsReducer from '../../features/notifications/notificationsSlice';
+import * as courseSlice from '../../features/courses/coursesSlice';
 
-const mockStore = configureStore([]);
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
+});
 
-describe('CourseList component', () => {
-  beforeEach(() => {
-    StyleSheetTestUtils.suppressStyleInjection();
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
+
+
+function renderWithProvider(ui, preloadedState = {}) {
+  const store = configureStore({
+    reducer: {
+      auth: authReducer,
+      courses: coursesReducer,
+      notifications: notificationsReducer,
+    },
+    preloadedState,
   });
 
-  afterEach(() => {
-    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-  });
+  return render(<Provider store={store}>{ui}</Provider>);
+}
 
-  test('Renders correctly when course list is empty', () => {
-    const store = mockStore({ courses: { courses: [] } }); // ✅ correction ici
+jest.spyOn(courseSlice, 'fetchCourses').mockImplementation(() => () => {});
 
-    render(
-      <Provider store={store}>
-        <CourseList />
-      </Provider>
-    );
-
-    expect(screen.getByText(/No course available yet/i)).toBeInTheDocument();
-  });
-
-  test('Renders correctly with courses from Redux store', () => {
-    const store = mockStore({
-      courses: {
-        courses: [
-          { id: 1, name: 'ES6', credit: 60 },
-          { id: 2, name: 'Webpack', credit: 20 },
-          { id: 3, name: 'React', credit: 40 },
-        ],
+test('renders without crashing', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
       },
-    }); // ✅ correction ici
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const title = await screen.findByText(/Available courses/i);
+  expect(title).toBeInTheDocument();
+});
 
-    render(
-      <Provider store={store}>
-        <CourseList />
-      </Provider>
-    );
+test('renders correct number of rows when courses are available', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const rows = await screen.findAllByRole('row');
+  expect(rows).toHaveLength(5);
+});
 
-    expect(screen.getByText(/Available courses/i)).toBeInTheDocument();
-    expect(screen.getByText(/Course name/i)).toBeInTheDocument();
-    expect(screen.getByText(/Credit/i)).toBeInTheDocument();
+test('renders fallback when no courses available', () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: []
+    }
+  }
 
-    expect(screen.getByText('ES6')).toBeInTheDocument();
-    expect(screen.getByText('60')).toBeInTheDocument();
+  renderWithProvider(<CourseList />, preloadedState);
 
-    expect(screen.getByText('Webpack')).toBeInTheDocument();
-    expect(screen.getByText('20')).toBeInTheDocument();
-
-    expect(screen.getByText('React')).toBeInTheDocument();
-    expect(screen.getByText('40')).toBeInTheDocument();
-  });
+  const noCoursesRow = screen.getByText(/no course available yet/i);
+  expect(noCoursesRow).toBeInTheDocument();
 });

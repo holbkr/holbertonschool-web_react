@@ -1,50 +1,37 @@
-import { StyleSheet, css } from 'aphrodite';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCourses } from '../../features/courses/coursesSlice';
 import CourseListRow from './CourseListRow/CourseListRow';
 import WithLogging from '../../components/HOC/WithLogging';
 
-const styles = StyleSheet.create({
-  courses: {
-    //margin: '130px auto',
-    //width: '90%',
-    //height: '33vh',
-  },
-  table: {
-    //width: '100%',
-    //borderCollapse: 'collapse',
-    //border: '2px solid rgb(161, 161, 161)',
-  },
-  thtd: {
-    //order: '2px solid rgb(161, 161, 161)',
-  },
-});
-
 function CourseList() {
-  const courses = useSelector((state) => state.courses);
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.courses.courses);
+
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
 
   return (
-    <div className={css(styles.courses)}>
-      <table id="CourseList" className={css(styles.table)}>
+    <div>
+      <table id="CourseList">
         <thead>
           {courses.length > 0 ? (
             <>
               <CourseListRow
                 textFirstCell="Available courses"
                 isHeader={true}
-                style={styles.thtd}
               />
               <CourseListRow
                 textFirstCell="Course name"
                 textSecondCell="Credit"
                 isHeader={true}
-                style={styles.thtd}
               />
             </>
           ) : (
             <CourseListRow
               isHeader={true}
               textFirstCell="No course available yet"
-              style={styles.thtd}
             />
           )}
         </thead>
@@ -55,7 +42,6 @@ function CourseList() {
                 key={course.id}
                 textFirstCell={course.name}
                 textSecondCell={course.credit}
-                style={styles.thtd}
               />
             ))}
           </tbody>
