@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import BodySectionWithMarginBottom from '../../components/BodySectionWithMarginBottom/BodySectionWithMarginBottom';
+import CourseList from './CourseList';
 import { StyleSheetTestUtils } from 'aphrodite';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from '../../features/auth/authSlice';
+import coursesReducer from '../../features/courses/coursesSlice';
+import notificationsReducer from '../../features/notifications/notificationsSlice';
+import * as courseSlice from '../../features/courses/coursesSlice';
 
-// Supprime l'injection des styles Aphrodite pendant les tests
 beforeEach(() => {
   StyleSheetTestUtils.suppressStyleInjection();
 });
@@ -11,43 +16,82 @@ afterEach(() => {
   StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
 });
 
-// Mock de BodySection
-const mockBodySection = jest.fn();
-jest.mock('../../components/BodySection/BodySection.jsx', () => {
-  const MockBodySection = (props) => {
-    mockBodySection(props);
-    return (
-      <div>
-        <h2>{props.title}</h2>
-        {props.children}
-      </div>
-    );
-  };
-  MockBodySection.displayName = 'MockBodySection';
-  return MockBodySection;
+
+function renderWithProvider(ui, preloadedState = {}) {
+  const store = configureStore({
+    reducer: {
+      auth: authReducer,
+      courses: coursesReducer,
+      notifications: notificationsReducer,
+    },
+    preloadedState,
+  });
+
+  return render(<Provider store={store}>{ui}</Provider>);
+}
+
+jest.spyOn(courseSlice, 'fetchCourses').mockImplementation(() => () => {});
+
+test('renders without crashing', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const title = await screen.findByText(/Available courses/i);
+  expect(title).toBeInTheDocument();
 });
 
-describe('BodySectionWithMarginBottom', () => {
-  test('Should render BodySection inside a wrapper div with expected content', () => {
-    render(
-      <BodySectionWithMarginBottom title="Hello!">
-        <p>This is child content</p>
-        <span>Hey there!</span>
-      </BodySectionWithMarginBottom>
-    );
+test('renders correct number of rows when courses are available', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const rows = await screen.findAllByRole('row');
+  expect(rows).toHaveLength(5);
+});
 
-    const wrapper = screen.getByTestId('body-section-with-margin');
-    expect(wrapper).toBeInTheDocument();
+test('renders fallback when no courses available', () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: []
+    }
+  }
 
-    expect(mockBodySection).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'Hello!',
-        children: expect.anything(),
-      })
-    );
+  renderWithProvider(<CourseList />, preloadedState);
 
-    expect(wrapper).toHaveTextContent('Hello!');
-    expect(wrapper).toHaveTextContent('This is child content');
-    expect(wrapper).toHaveTextContent('Hey there!');
-  });
+  const noCoursesRow = screen.getByText(/no course available yet/i);
+  expect(noCoursesRow).toBeInTheDocument();
 });
