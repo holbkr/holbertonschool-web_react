@@ -42,7 +42,9 @@ const Notifications = memo(function Notifications() {
   const notifRef = useRef(null);
 
   const toggleDrawer = () => {
-    notifRef.current.classList.toggle(css(styles.visible));
+    if (notifRef.current) {
+      notifRef.current.classList.toggle(css(styles.visible));
+    }
   };
 
   return (
@@ -50,7 +52,7 @@ const Notifications = memo(function Notifications() {
       <div className={css(styles.menuItem)} onClick={toggleDrawer}>
         Your notifications
       </div>
-      <div ref={notifRef} className={css(styles.notifications)}>
+      <div ref={notifRef} className={`${css(styles.notifications)}`}>
         {notifications.length > 0 ? (
           <>
             <p>Here is the list of notifications</p>
