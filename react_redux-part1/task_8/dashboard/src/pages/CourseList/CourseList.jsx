@@ -15,51 +15,49 @@ const styles = StyleSheet.create({
     //border: '2px solid rgb(161, 161, 161)',
   },
   thtd: {
-    //order: '2px solid rgb(161, 161, 161)',
+    //border: '2px solid rgb(161, 161, 161)',
   },
 });
 
 function CourseList() {
-  const courses = useSelector((state) => state.courses.courses); // ✅ correct ici
+  const courses = useSelector((state) => state.courses.courses);
 
   return (
     <div className={css(styles.courses)}>
       <table id="CourseList" className={css(styles.table)}>
         <thead>
-          {courses.length > 0 ? (
-            <>
-              <CourseListRow
-                textFirstCell="Available courses"
-                isHeader={true}
-                style={styles.thtd}
-              />
-              <CourseListRow
-                textFirstCell="Course name"
-                textSecondCell="Credit"
-                isHeader={true}
-                style={styles.thtd}
-              />
-            </>
-          ) : (
+          <CourseListRow
+            textFirstCell="Available courses"
+            isHeader={true}
+            style={styles.thtd}
+          />
+          {courses.length > 0 && (
             <CourseListRow
+              textFirstCell="Course name"
+              textSecondCell="Credit"
               isHeader={true}
-              textFirstCell="No course available yet"
               style={styles.thtd}
             />
           )}
         </thead>
-        {courses.length > 0 && (
-          <tbody>
-            {courses.map((course) => (
+        <tbody>
+          {courses.length === 0 ? (
+            <CourseListRow
+              textFirstCell="No course available yet"
+              isHeader={false}
+              style={styles.thtd}
+            />
+          ) : (
+            courses.map((course) => (
               <CourseListRow
                 key={course.id}
                 textFirstCell={course.name}
                 textSecondCell={course.credit}
                 style={styles.thtd}
               />
-            ))}
-          </tbody>
-        )}
+            ))
+          )}
+        </tbody>
       </table>
     </div>
   );

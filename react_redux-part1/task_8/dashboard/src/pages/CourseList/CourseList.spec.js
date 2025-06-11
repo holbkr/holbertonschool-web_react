@@ -16,7 +16,7 @@ describe('CourseList component', () => {
   });
 
   test('Renders correctly when course list is empty', () => {
-    const store = mockStore({ courses: [] });
+    const store = mockStore({ courses: { courses: [] } }); // ✅ correction ici
 
     render(
       <Provider store={store}>
@@ -29,12 +29,14 @@ describe('CourseList component', () => {
 
   test('Renders correctly with courses from Redux store', () => {
     const store = mockStore({
-      courses: [
-        { id: 1, name: 'ES6', credit: 60 },
-        { id: 2, name: 'Webpack', credit: 20 },
-        { id: 3, name: 'React', credit: 40 },
-      ],
-    });
+      courses: {
+        courses: [
+          { id: 1, name: 'ES6', credit: 60 },
+          { id: 2, name: 'Webpack', credit: 20 },
+          { id: 3, name: 'React', credit: 40 },
+        ],
+      },
+    }); // ✅ correction ici
 
     render(
       <Provider store={store}>
@@ -46,7 +48,6 @@ describe('CourseList component', () => {
     expect(screen.getByText(/Course name/i)).toBeInTheDocument();
     expect(screen.getByText(/Credit/i)).toBeInTheDocument();
 
-    // Vérifie chaque ligne de cours
     expect(screen.getByText('ES6')).toBeInTheDocument();
     expect(screen.getByText('60')).toBeInTheDocument();
 
