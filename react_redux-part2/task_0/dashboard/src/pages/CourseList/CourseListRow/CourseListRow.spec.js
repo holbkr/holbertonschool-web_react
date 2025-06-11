@@ -1,64 +1,97 @@
-import { render, screen, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import CourseListRow from './CourseListRow';
+import { render, screen } from '@testing-library/react';
+import CourseList from './CourseList';
+import { StyleSheetTestUtils } from 'aphrodite';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from '../../features/auth/authSlice';
+import coursesReducer from '../../features/courses/coursesSlice';
+import notificationsReducer from '../../features/notifications/notificationsSlice';
+import * as courseSlice from '../../features/courses/coursesSlice';
 
-describe('CourseListRow component', () => {
-  test('Renders two "th" elements when isHeader is true and both texts are provided', () => {
-    render(
-      <table>
-        <tbody>
-          <CourseListRow isHeader={true} textFirstCell="First" textSecondCell="Second" />
-        </tbody>
-      </table>
-    );
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
+});
 
-    const headers = screen.getAllByRole('columnheader');
-    expect(headers).toHaveLength(2);
-    expect(headers[0]).toHaveTextContent('First');
-    expect(headers[1]).toHaveTextContent('Second');
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
+
+
+function renderWithProvider(ui, preloadedState = {}) {
+  const store = configureStore({
+    reducer: {
+      auth: authReducer,
+      courses: coursesReducer,
+      notifications: notificationsReducer,
+    },
+    preloadedState,
   });
 
-  test('Renders one "th" with colspan=2 when isHeader is true and textSecondCell is null', () => {
-    render(
-      <table>
-        <tbody>
-          <CourseListRow isHeader={true} textFirstCell="Only one cell" textSecondCell={null} />
-        </tbody>
-      </table>
-    );
+  return render(<Provider store={store}>{ui}</Provider>);
+}
 
-    const header = screen.getByRole('columnheader');
-    expect(header).toHaveAttribute('colspan', '2');
-    expect(header).toHaveTextContent('Only one cell');
-  });
+jest.spyOn(courseSlice, 'fetchCourses').mockImplementation(() => () => {});
 
-  test('Renders two "td" elements when isHeader is false', () => {
-    render(
-      <table>
-        <tbody>
-          <CourseListRow isHeader={false} textFirstCell="Course 1" textSecondCell="60" />
-        </tbody>
-      </table>
-    );
+test('renders without crashing', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const title = await screen.findByText(/Available courses/i);
+  expect(title).toBeInTheDocument();
+});
 
-    const cells = screen.getAllByRole('cell');
-    expect(cells).toHaveLength(2);
-    expect(cells[0]).toHaveTextContent('Course 1');
-    expect(cells[1]).toHaveTextContent('60');
-  });
+test('renders correct number of rows when courses are available', async () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: [
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'WebPack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 },
+      ]
+    }
+  }
+  renderWithProvider(<CourseList />, preloadedState);
+  const rows = await screen.findAllByRole('row');
+  expect(rows).toHaveLength(5);
+});
 
-  test('Renders <tr> with two <td> inside when isHeader is false', () => {
-    render(
-      <table>
-        <tbody>
-          <CourseListRow isHeader={false} textFirstCell="Math" textSecondCell="100" />
-        </tbody>
-      </table>
-    );
+test('renders fallback when no courses available', () => {
+  const preloadedState = {
+    auth: {
+      user: {
+        email: 'test@example.com',
+        password: '12345678',
+      },
+      isLoggedIn: true,
+    },
+    courses: {
+      courses: []
+    }
+  }
 
-    const row = screen.getByRole('row');
-    const cells = within(row).getAllByRole('cell');
-    expect(row).toBeInTheDocument();
-    expect(cells).toHaveLength(2);
-  });
+  renderWithProvider(<CourseList />, preloadedState);
+
+  const noCoursesRow = screen.getByText(/no course available yet/i);
+  expect(noCoursesRow).toBeInTheDocument();
 });

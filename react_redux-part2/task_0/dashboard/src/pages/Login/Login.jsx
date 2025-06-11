@@ -7,29 +7,29 @@ import { login } from '../../features/auth/authSlice';
 
 const styles = StyleSheet.create({
   body: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '60vh',
-    padding: '20px 20px 20px 40px',
-    borderTop: '5px solid red',
-    fontFamily: 'Roboto, sans-serif',
+    //display: 'flex',
+    //flexDirection: 'column',
+    //height: '60vh',
+    //padding: '20px 20px 20px 40px',
+    //borderTop: '5px solid red',
+    //fontFamily: 'Roboto, sans-serif',
   },
   paragraph: {
-    fontSize: '1.3rem',
-    margin: 0,
+    //fontSize: '1.3rem',
+    //margin: 0,
   },
   form: {
-    margin: '20px 0',
-    fontSize: '1.2rem',
+    //margin: '20px 0',
+    //fontSize: '1.2rem',
   },
   label: {
-    paddingRight: '10px',
+    //paddingRight: '10px',
   },
   input: {
-    marginRight: '10px',
+    //marginRight: '10px',
   },
   button: {
-    cursor: 'pointer',
+    //cursor: 'pointer',
   },
 });
 

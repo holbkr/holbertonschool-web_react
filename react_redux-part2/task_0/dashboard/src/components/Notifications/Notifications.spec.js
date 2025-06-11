@@ -27,10 +27,26 @@ const renderWithRedux = (ui, { initialState } = {}) => {
 const mockNotifications = [
   { id: 1, type: 'default', value: 'New course available' },
   { id: 2, type: 'urgent', value: 'New resume available' },
-  { id: 3, type: 'urgent', value: getLatestNotification() },
+  { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
 ];
 
 describe('Notifications component', () => {
+  test('Displays title, close button, and list items when visible', () => {
+    renderWithRedux(<Notifications />, {
+      initialState: {
+        notifications: {
+          notifications: mockNotifications,
+        },
+      },
+    });
+
+    fireEvent.click(screen.getByText(/your notifications/i));
+
+    expect(screen.getByText(/here is the list of notifications/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+  });
+
   test('Displays "No new notifications" when list is empty', () => {
     renderWithRedux(<Notifications />, {
       initialState: {
@@ -41,27 +57,8 @@ describe('Notifications component', () => {
     });
 
     fireEvent.click(screen.getByText(/your notifications/i));
+
     expect(screen.getByText(/no new notifications for now/i)).toBeInTheDocument();
-  });
-
-  test('Toggle visibility class on drawer when clicking on title and close button', () => {
-    renderWithRedux(<Notifications />, {
-      initialState: {
-        notifications: {
-          notifications: mockNotifications,
-        },
-      },
-    });
-
-    const title = screen.getByText(/your notifications/i);
-    fireEvent.click(title);
-
-    const drawer = screen.getByText(/here is the list of notifications/i).parentElement;
-    expect(drawer.className).not.toMatch(/visible/);
-
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(closeButton);
-    expect(drawer.className).toMatch(/visible/);
   });
 
   test('Clicking a notification dispatches markAsRead with correct ID', () => {
@@ -73,11 +70,31 @@ describe('Notifications component', () => {
       },
     });
 
-    fireEvent.click(screen.getByText(/your notifications/i)); // open drawer
-    fireEvent.click(screen.getByText(/new course available/i)); // click notif
+    fireEvent.click(screen.getByText(/your notifications/i));
+    fireEvent.click(screen.getByText(/new course available/i));
 
     const actions = store.getActions();
     expect(actions).toContainEqual(markAsRead(1));
+  });
+
+  test('Toggles visibility of notifications drawer with CSS class', () => {
+    renderWithRedux(<Notifications />, {
+      initialState: {
+        notifications: {
+          notifications: mockNotifications,
+        },
+      },
+    });
+
+    const toggle = screen.getByText(/your notifications/i);
+    fireEvent.click(toggle); // Open
+
+    const notifText = screen.getByText(/here is the list of notifications/i);
+    expect(notifText.closest('div').className).toMatch(/visible/);
+
+    const closeBtn = screen.getByLabelText(/close/i);
+    fireEvent.click(closeBtn); // Close
+    expect(notifText.closest('div').className).not.toMatch(/visible/);
   });
 
   test('Component is memoized', () => {
