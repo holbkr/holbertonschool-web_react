@@ -5,20 +5,19 @@ import WithLogging from '../../components/HOC/WithLogging';
 
 const styles = StyleSheet.create({
   courses: {
-    margin: '130px auto',
-    width: '90%',
-    height: '33vh',
+    //margin: '130px auto',
+    //width: '90%',
+    //height: '33vh',
   },
   table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    border: '2px solid rgb(161, 161, 161)',
+    //width: '100%',
+    //borderCollapse: 'collapse',
+    //border: '2px solid rgb(161, 161, 161)',
   },
   thtd: {
-    border: '2px solid rgb(161, 161, 161)',
+    //order: '2px solid rgb(161, 161, 161)',
   },
 });
-
 function CourseList() {
   const courses = useSelector((state) => state.courses);
 
