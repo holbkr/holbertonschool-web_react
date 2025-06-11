@@ -49,12 +49,12 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
-      markNotificationAsRead: (state, action) => {
-      const id = action.payload;
-      const notif = state.notifications.find((n) => n.id === id);
-      if (notif) {
-        notif.isRead = true;
-      }
+    markNotificationAsRead: (state, action) => {
+      const idToRemove = action.payload;
+      console.log(`Notification ${idToRemove} has been marked as read`);
+      state.notifications = state.notifications.filter(
+        (notification) => notification.id !== idToRemove
+      );
     },
     showDrawer: (state) => {
       state.displayDrawer = true;
