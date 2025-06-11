@@ -15,10 +15,11 @@ export default function Footer() {
 
 const styles = StyleSheet.create({
   footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontStyle: 'italic',
-    fontFamily: 'sans-serif',
+    //display: 'flex',
+    //flexDirection: 'column',
+    //alignItems: 'center',
+    //justifyContent: 'center',
+    //fontStyle: 'italic',
+    //fontFamily: 'sans-serif',
   },
 });

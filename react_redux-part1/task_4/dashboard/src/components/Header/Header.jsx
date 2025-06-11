@@ -2,27 +2,28 @@ import { StyleSheet, css } from "aphrodite";
 import logo from "../../assets/holberton-logo.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
+
 const styles = StyleSheet.create({
   header: {
-    display: "inline-flex",
-    alignItems: "center",
-    fontSize: "20px",
-    fontFamily: "sans-serif",
+    //display: "inline-flex",
+    //alignItems: "center",
+    //fontSize: "20px",
+    //fontFamily: "sans-serif",
   },
   title: {
-    color: "#e1003c",
-    fontFamily: "'Roboto', sans-serif",
-    fontWeight: "bold",
-    fontSize: "2.5rem",
-    margin: 0,
+    //color: "#e1003c",
+    //fontFamily: "'Roboto', sans-serif",
+    //fontWeight: "bold",
+    //fontSize: "2.5rem",
+    //margin: 0,
   },
   logo: {
-    height: "30vmin",
-    pointerEvents: "none",
+    //height: "30vmin",
+    //pointerEvents: "none",
   },
   logoutSection: {
-    marginLeft: "auto",
-    fontSize: "1rem",
+    //marginLeft: "auto",
+    //fontSize: "1rem",
   },
 });
 
