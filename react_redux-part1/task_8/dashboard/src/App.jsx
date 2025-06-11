@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchNotifications } from './redux/notificationSlice';
-import { fetchCourses } from './redux/courseSlice'; // ✅ ajout ici
+import { fetchCourses } from './redux/courseSlice';
 import Notifications from './components/Notifications/Notifications';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
@@ -27,8 +27,8 @@ export default function App() {
   return (
     <>
       <Notifications />
-      <>
-        <Header />
+      <Header />
+      <main>
         {!isLoggedIn ? (
           <BodySectionWithMarginBottom title="Log in to continue">
             <Login />
@@ -41,7 +41,7 @@ export default function App() {
         <BodySection title="News from the School">
           <p>Holberton School news goes here</p>
         </BodySection>
-      </>
+      </main>
       <Footer />
     </>
   );

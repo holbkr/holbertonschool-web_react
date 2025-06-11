@@ -1,27 +1,56 @@
-function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
-  if (isHeader) {
-    if (textSecondCell === null || textSecondCell === undefined) {
-      return (
-        <tr>
-          <th>{textFirstCell}</th>
-        </tr>
-      );
-    } else {
-      return (
-        <tr>
-          <th>{textFirstCell}</th>
-          <th>{textSecondCell}</th>
-        </tr>
-      );
-    }
-  } else {
-    return (
-      <tr>
-        <td>{textFirstCell}</td>
-        <td>{textSecondCell}</td>
-      </tr>
-    );
-  }
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCourses } from '../../features/courses/coursesSlice';
+import CourseListRow from './CourseListRow/CourseListRow';
+import WithLogging from '../../components/HOC/WithLogging';
+
+function CourseList() {
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.courses.courses);
+
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
+  return (
+    <div>
+      <table id="CourseList">
+        <thead>
+          {courses.length > 0 ? (
+            <>
+              <CourseListRow
+                textFirstCell="Available courses"
+                isHeader={true}
+              />
+              <CourseListRow
+                textFirstCell="Course name"
+                textSecondCell="Credit"
+                isHeader={true}
+              />
+            </>
+          ) : (
+            <CourseListRow
+              isHeader={true}
+              textFirstCell="No course available yet"
+            />
+          )}
+        </thead>
+        {courses.length > 0 && (
+          <tbody>
+            {courses.length > 0 ? (
+              courses.map((course) => (
+                <CourseListRow
+                  key={course.id}
+                  textFirstCell={course.name}
+                  textSecondCell={course.credit}
+                />
+              ))
+            ) : null}
+          </tbody>
+        )}
+      </table>
+    </div>
+  );
 }
 
-export default CourseListRow;
+export default WithLogging(CourseList);
