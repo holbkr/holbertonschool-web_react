@@ -9,46 +9,32 @@ import CourseList from './pages/CourseList/CourseList';
 import BodySectionWithMarginBottom from './components/BodySectionWithMarginBottom/BodySectionWithMarginBottom';
 import BodySection from './components/BodySection/BodySection';
 
-import { login, logout } from './features/auth/authSlice';
 import { fetchNotifications } from './features/notifications/notificationsSlice';
 import { fetchCourses } from './features/courses/coursesSlice';
 
 export default function App() {
   const dispatch = useDispatch();
-
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const courses = useSelector((state) => state.courses.courses);
 
-  // Important : on charge les notifications au montage
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
-  // On ne charge les cours que si l'utilisateur est connecté
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(fetchCourses());
     }
   }, [dispatch, isLoggedIn]);
 
-  // Connexion : simulation d'un login
-  const handleLogin = (email, password) => {
-    dispatch(login({ email, password }));
-  };
-
-  // Déconnexion
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   return (
     <>
       <Notifications />
-      <Header user={user} logOut={handleLogout} />
+      <Header user={user} />
 
       {!isLoggedIn ? (
         <BodySectionWithMarginBottom title="Log in to continue">
-          <Login login={handleLogin} />
+          <Login />
         </BodySectionWithMarginBottom>
       ) : (
         <BodySectionWithMarginBottom title="Course list">
