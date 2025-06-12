@@ -19,24 +19,24 @@ export default function App() {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const courses = useSelector((state) => state.courses.courses);
 
-  // ⚠️ Important : on charge les notifications au montage
+  // Important : on charge les notifications au montage
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
-  // ⚠️ On ne charge les cours que si l'utilisateur est connecté
+  // On ne charge les cours que si l'utilisateur est connecté
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(fetchCourses());
     }
   }, [dispatch, isLoggedIn]);
 
-  // ✅ Connexion : simulation d'un login
+  // Connexion : simulation d'un login
   const handleLogin = (email, password) => {
     dispatch(login({ email, password }));
   };
 
-  // ✅ Déconnexion
+  // Déconnexion
   const handleLogout = () => {
     dispatch(logout());
   };
