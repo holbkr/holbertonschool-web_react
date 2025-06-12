@@ -11,14 +11,16 @@ const initialState = {
   courses: [],
 };
 
-const fetchCourses = createAsyncThunk(
+// Thunk asynchrone pour récupérer les cours
+export const fetchCourses = createAsyncThunk(
   "courses/fetchCourses",
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(ENDPOINTS.courses);
       return response.data.courses;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Error fetching courses");
+      console.error("Error fetching courses:", error);
+      return thunkAPI.rejectWithValue("Failed to fetch courses");
     }
   }
 );
@@ -26,7 +28,12 @@ const fetchCourses = createAsyncThunk(
 const coursesSlice = createSlice({
   name: "courses",
   initialState,
-  reducers: {},
+  reducers: {
+    // Pour setter les cours manuellement si besoin
+    setCourses: (state, action) => {
+      state.courses = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCourses.fulfilled, (state, action) => {
@@ -36,5 +43,7 @@ const coursesSlice = createSlice({
   },
 });
 
-export { fetchCourses };
+// Export des actions
+export const { setCourses } = coursesSlice.actions;
+
 export default coursesSlice.reducer;

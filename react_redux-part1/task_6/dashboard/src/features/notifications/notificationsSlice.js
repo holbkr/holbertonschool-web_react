@@ -12,6 +12,7 @@ const ENDPOINTS = {
   notifications: `${API_BASE_URL}/notifications.json`,
 };
 
+// Async thunk pour récupérer les notifications
 export const fetchNotifications = createAsyncThunk(
   "notifications/fetchNotifications",
   async () => {
@@ -49,18 +50,24 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
+    // Marque une notif comme lue (on la supprime de la liste)
     markNotificationAsRead: (state, action) => {
       const idToRemove = action.payload;
-      console.log(`Notification ${idToRemove} has been marked as read`);
       state.notifications = state.notifications.filter(
         (notification) => notification.id !== idToRemove
       );
     },
+    // Affiche le panneau de notifications
     showDrawer: (state) => {
       state.displayDrawer = true;
     },
+    // Cache le panneau de notifications
     hideDrawer: (state) => {
       state.displayDrawer = false;
+    },
+    // Permet de setter manuellement une liste de notifications (utile en cas de dispatch direct dans App.jsx)
+    setNotifications: (state, action) => {
+      state.notifications = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -70,7 +77,12 @@ const notificationsSlice = createSlice({
   },
 });
 
-export const { markNotificationAsRead, showDrawer, hideDrawer } =
-  notificationsSlice.actions;
+// Export des actions
+export const {
+  markNotificationAsRead,
+  showDrawer,
+  hideDrawer,
+  setNotifications,
+} = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

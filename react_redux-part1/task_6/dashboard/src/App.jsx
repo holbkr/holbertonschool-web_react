@@ -1,99 +1,66 @@
-import { useEffect, useReducer } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import Notifications from './components/Notifications/Notifications';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Login from './pages/Login/Login';
 import CourseList from './pages/CourseList/CourseList';
-import { getLatestNotification } from './utils/utils';
 import BodySectionWithMarginBottom from './components/BodySectionWithMarginBottom/BodySectionWithMarginBottom';
 import BodySection from './components/BodySection/BodySection';
-import { appReducer, APP_ACTIONS, initialState } from './appReducer';
 
-const API_BASE_URL = 'http://localhost:5173';
-const ENDPOINTS = {
-  courses: `${API_BASE_URL}/courses.json`,
-  notifications: `${API_BASE_URL}/notifications.json`,
-};
+import { login, logout } from './features/auth/authSlice';
+import { fetchNotifications } from './features/notifications/notificationsSlice';
+import { fetchCourses } from './features/courses/coursesSlice';
 
 export default function App() {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const dispatch = useDispatch();
 
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const courses = useSelector((state) => state.courses.courses);
+
+  // ⚠️ Important : on charge les notifications au montage
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.get(ENDPOINTS.notifications);
-        const latestNotif = {
-          id: 3,
-          type: "urgent",
-          html: { __html: getLatestNotification() },
-        };
-        const currentNotifications = response.data.notifications;
-        const indexToReplace = currentNotifications.findIndex(
-          notification => notification.id === 3
-        );
-        const updatedNotifications = [...currentNotifications];
-        if (indexToReplace !== -1) {
-          updatedNotifications[indexToReplace] = latestNotif;
-        } else {
-          updatedNotifications.push(latestNotif);
-        }
-        dispatch({
-          type: APP_ACTIONS.SET_NOTIFICATIONS,
-          payload: updatedNotifications,
-        });
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-    fetchNotifications();
-  }, []);
+    dispatch(fetchNotifications());
+  }, [dispatch]);
 
+  // ⚠️ On ne charge les cours que si l'utilisateur est connecté
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(ENDPOINTS.courses);
-        dispatch({
-          type: APP_ACTIONS.SET_COURSES,
-          payload: response.data.courses,
-        });
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }
-    };
-    fetchCourses();
-  }, [state.user.isLoggedIn]);
+    if (isLoggedIn) {
+      dispatch(fetchCourses());
+    }
+  }, [dispatch, isLoggedIn]);
 
-  const logIn = (email, password) => {
-    dispatch({
-      type: APP_ACTIONS.LOGIN,
-      payload: { email, password },
-    });
+  // ✅ Connexion : simulation d'un login
+  const handleLogin = (email, password) => {
+    dispatch(login({ email, password }));
   };
 
-  const logOut = () => {
-    dispatch({ type: APP_ACTIONS.LOGOUT });
+  // ✅ Déconnexion
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
     <>
       <Notifications />
-      <>
-        <Header user={state.user} logOut={logOut} />
-        {!state.user.isLoggedIn ? (
-          <BodySectionWithMarginBottom title="Log in to continue">
-            <Login login={logIn} />
-          </BodySectionWithMarginBottom>
-        ) : (
-          <BodySectionWithMarginBottom title="Course list">
-            <CourseList courses={state.courses} />
-          </BodySectionWithMarginBottom>
-        )}
-        <BodySection title="News from the School">
-          <p>Holberton School news goes here</p>
-        </BodySection>
-      </>
-      <Footer user={state.user} />
+      <Header user={user} logOut={handleLogout} />
+
+      {!isLoggedIn ? (
+        <BodySectionWithMarginBottom title="Log in to continue">
+          <Login login={handleLogin} />
+        </BodySectionWithMarginBottom>
+      ) : (
+        <BodySectionWithMarginBottom title="Course list">
+          <CourseList courses={courses} />
+        </BodySectionWithMarginBottom>
+      )}
+
+      <BodySection title="News from the School">
+        <p>Holberton School news goes here</p>
+      </BodySection>
+
+      <Footer user={user} />
     </>
   );
 }
