@@ -6,6 +6,6 @@ describe('App component', () => {
     render(<App />);
     expect(screen.getByText(/School dashboard/i)).toBeInTheDocument();
     expect(screen.getByText(/Login to access the full dashboard/i)).toBeInTheDocument();
-    expect(screen.getByText(/Copyright/i)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`Copyright ${new Date().getFullYear()} - Holberton School`, 'i'))).toBeInTheDocument();
   });
 });
