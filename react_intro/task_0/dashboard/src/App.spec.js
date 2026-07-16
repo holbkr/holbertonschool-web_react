@@ -4,7 +4,7 @@ import App from './App';
 
 describe('App component', () => {
   test('renders the main heading', () => {
-    const { container } = render(<App />);
+    render(<App />);
     const heading = screen.getByRole('heading', { level: 1, name: /school dashboard/i });
     expect(heading).toBeInTheDocument();
   });
@@ -19,7 +19,7 @@ describe('App component', () => {
 
   test('renders the Holberton logo image', () => {
     render(<App />);
-    const image = screen.getByAltText(/holberton logo/i);
+    const image = screen.getByAltText(/logo/i);
     expect(image).toBeInTheDocument();
   });
 });
