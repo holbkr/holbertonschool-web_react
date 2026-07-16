@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+  --color-main: #e1003c;
+  --color-default-notification-item: blue;
+  --color-urgent-notification-item: red;
+}
+
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+    color: #1f2937;
+    background-color: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+}
