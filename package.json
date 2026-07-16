@@ -1,9 +1,16 @@
 {
-  "devDependencies": {
-    "axios-mock-adapter": "^2.1.0"
-  },
+  "homepage": "https://holbkr.github.io/holbertonschool-web_react",
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^2.1.0",
+    "gh-pages": "^6.1.1"
+  },
+  "scripts": {
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   }
 }
