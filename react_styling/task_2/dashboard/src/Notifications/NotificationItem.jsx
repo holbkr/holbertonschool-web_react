@@ -10,7 +10,7 @@ export default function NotificationItem({ type, html, value }) {
     return (
       <li
         data-notification-type={type}
-        className={`rounded border border-gray-200 p-2 text-sm sm:text-base ${colorClass}`}
+        className={`rounded border border-gray-200 p-1.5 text-sm sm:text-base ${colorClass}`}
         dangerouslySetInnerHTML={html}
       />
     );
@@ -19,7 +19,7 @@ export default function NotificationItem({ type, html, value }) {
   return (
     <li
       data-notification-type={type}
-      className={`rounded border border-gray-200 p-2 text-sm sm:text-base ${colorClass}`}
+      className={`rounded border border-gray-200 p-1.5 text-sm sm:text-base ${colorClass}`}
     >
       {value}
     </li>
