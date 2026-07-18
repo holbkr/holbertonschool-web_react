@@ -7,7 +7,7 @@ export default function Notifications({ notifications, displayDrawer = true }) {
   return (
     <div className="w-full min-[913px]:w-1/4">
       <div className="mb-2 flex justify-end">
-        <p className={`notification-title text-right text-sm font-semibold text-[var(--main-color)] sm:text-base ${shouldBounce ? 'animate-bounce' : ''}`}>
+        <p className={`notification-title text-right text-sm font-semibold text-slate-800 sm:text-base ${shouldBounce ? 'animate-bounce' : ''}`}>
           Your notifications
         </p>
       </div>

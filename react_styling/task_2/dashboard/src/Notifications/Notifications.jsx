@@ -5,7 +5,7 @@ export default function Notifications({ notifications, displayDrawer = true }) {
   return (
     <div className="w-1/4 min-w-[220px] max-w-sm">
       <div className="mb-2 flex justify-end">
-        <p className="text-right text-sm font-semibold text-[var(--main-color)] sm:text-base">Your notifications</p>
+        <p className="text-right text-sm font-semibold text-slate-800 sm:text-base">Your notifications</p>
       </div>
       {displayDrawer ? (
         <div className="relative sticky top-4 rounded-lg border border-dashed border-[var(--main-color)] bg-white p-3 shadow-sm sm:p-4">
