@@ -8,7 +8,7 @@ export default function Notifications({ notifications, displayDrawer = true }) {
         <p className="notification-title text-right text-sm font-semibold text-[var(--main-color)] sm:text-base">Your notifications</p>
       </div>
       {displayDrawer ? (
-        <div className="relative w-full rounded-lg border border-dashed border-[var(--main-color)] bg-white p-3 shadow-sm min-[913px]:sticky min-[913px]:top-4 min-[913px]:p-4">
+        <div className="fixed inset-0 z-50 overflow-y-auto border-0 bg-white p-3 shadow-sm min-[913px]:static min-[913px]:z-auto min-[913px]:h-auto min-[913px]:w-auto min-[913px]:rounded-lg min-[913px]:border min-[913px]:border-dashed min-[913px]:border-[var(--main-color)] min-[913px]:p-4 min-[913px]:sticky min-[913px]:top-4">
           {notifications.length > 0 ? (
             <>
               <p className="mb-2 text-sm text-slate-700">Here is the list of notifications</p>

@@ -12,7 +12,7 @@ class CourseList extends React.Component {
     return (
       <div className="mx-auto my-8 w-full sm:w-[80%] max-w-5xl overflow-x-auto">
         <div className="overflow-hidden rounded-md border border-gray-400">
-          <table id="CourseList" className="w-full min-w-[420px] border-collapse">
+          <table id="CourseList" className="w-full border-collapse">
             {courses.length > 0 ? (
               <>
                 <thead>
