@@ -1,27 +1,41 @@
-import React from "react";
+function CourseListRow({
+  isHeader = false,
+  textFirstCell = '',
+  textSecondCell = null,
+}) {
+  if (isHeader && textSecondCell === null) {
+    return (
+      <tr className="bg-table-header opacity-[66%]">
+        <th className="border border-gray-400" colSpan="2">
+          {textFirstCell}
+        </th>
+      </tr>
+    );
+  }
 
-export default function CourseListRow({ isHeader=false, textFirstCell="", textSecondCell=null }) {
-  const rowClasses = isHeader
-    ? 'bg-[var(--color-table-header)]/66 text-left'
-    : 'bg-[var(--color-table-rows)]/45 text-left';
+  if (isHeader) {
+    return (
+      <tr className="bg-table-header opacity-[66%]">
+        <th className="border border-gray-400">
+          {textFirstCell}
+        </th>
+        <th className="border border-gray-400">
+          {textSecondCell}
+        </th>
+      </tr>
+    );
+  }
 
   return (
-    <tr className={rowClasses}>
-      {isHeader ? (
-        textSecondCell === null ? (
-          <th colSpan="2" className="border border-gray-400 px-2 py-2">{textFirstCell}</th>
-        ) : (
-          <>
-            <th className="w-[70%] border border-gray-400 px-2 py-2">{textFirstCell}</th>
-            <th className="border border-gray-400 px-2 py-2">{textSecondCell}</th>
-          </>
-        )
-      ) : (
-        <>
-          <td className="border border-gray-400 py-2 pl-2">{textFirstCell}</td>
-          <td className="border border-gray-400 py-2 pl-2">{textSecondCell}</td>
-        </>
-      )}
+    <tr className="bg-table-rows opacity-[45%]">
+      <td className="border border-gray-400 pl-2">
+        {textFirstCell}
+      </td>
+      <td className="border border-gray-400 pl-2">
+        {textSecondCell}
+      </td>
     </tr>
   );
 }
+
+export default CourseListRow;
