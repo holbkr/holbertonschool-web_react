@@ -18,8 +18,8 @@ export default function CourseListRow({ isHeader=false, textFirstCell="", textSe
         )
       ) : (
         <>
-          <td className="border border-gray-400 px-2 py-2">{textFirstCell}</td>
-          <td className="border border-gray-400 px-2 py-2">{textSecondCell}</td>
+          <td className="border border-gray-400 py-2 pl-2">{textFirstCell}</td>
+          <td className="border border-gray-400 py-2 pl-2">{textSecondCell}</td>
         </>
       )}
     </tr>

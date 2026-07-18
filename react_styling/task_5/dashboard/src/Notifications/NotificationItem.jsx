@@ -1,18 +1,17 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function NotificationItem({ type, html, value }) {
   const colorClass = type === 'urgent'
-    ? 'text-[var(--color-urgent-notification-item)]'
-    : 'text-[var(--color-default-notification-item)]';
-  const style = { color: type === 'urgent' ? 'red' : 'blue' };
+    ? 'text-[var(--urgent-notification-item)]'
+    : 'text-[var(--default-notification-item)]';
+
+  const baseClass = `rounded border border-gray-300 p-3 text-sm sm:border-gray-200 sm:p-2 sm:text-base ${colorClass}`;
 
   if (html) {
     return (
       <li
         data-notification-type={type}
-        className={`rounded border border-slate-200 bg-slate-50 p-2 text-sm ${colorClass}`}
-        style={style}
+        className={baseClass}
         dangerouslySetInnerHTML={html}
       />
     );
@@ -21,8 +20,7 @@ export default function NotificationItem({ type, html, value }) {
   return (
     <li
       data-notification-type={type}
-      className={`rounded border border-slate-200 bg-slate-50 p-2 text-sm ${colorClass}`}
-      style={style}
+      className={baseClass}
     >
       {value}
     </li>

@@ -2,9 +2,11 @@
 
 @theme {
   --font-sans: "Roboto", sans-serif;
-  --color-main: #e1003c;
-  --color-default-notification-item: blue;
-  --color-urgent-notification-item: red;
+  --main-color: #e1003c;
+  --default-notification-item: blue;
+  --urgent-notification-item: red;
+  --color-table-header: #deb5b5;
+  --color-table-rows: #cdcdcd;
 }
 
 @layer base {

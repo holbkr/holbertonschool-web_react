@@ -7,15 +7,8 @@ import PropTypes from 'prop-types';
 import { getLatestNotification } from '../utils/utils';
 import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
-import WithLogging from '../HOC/WithLogging';  // ✅ Ajout du HOC
-
-// On importe les composants de base
-import LoginBase from '../Login/Login';
-import CourseListBase from '../CourseList/CourseList';
-
-// On les enrobe avec le HOC
-const Login = WithLogging(LoginBase);
-const CourseList = WithLogging(CourseListBase);
+import Login from '../Login/Login';
+import CourseList from '../CourseList/CourseList';
 
 class App extends React.Component {
   constructor(props) {

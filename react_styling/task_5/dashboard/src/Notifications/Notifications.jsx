@@ -1,20 +1,19 @@
-import { useMemo } from 'react';
 import closebtn from '../assets/close-button.png';
 import NotificationItem from './NotificationItem';
 
 export default function Notifications({ notifications, displayDrawer = true }) {
-  const hasNotifications = useMemo(() => notifications.length > 0, [notifications.length]);
+  const shouldBounce = notifications.length > 0 && !displayDrawer;
 
   return (
-    <div className="w-full">
+    <div className="w-full min-[913px]:w-1/4">
       <div className="mb-2 flex justify-end">
-        <p className={`text-right text-sm font-semibold text-[var(--color-main)] sm:text-base ${hasNotifications ? 'animate-bounce' : ''}`}>
+        <p className={`text-right text-sm font-semibold text-[var(--main-color)] sm:text-base ${shouldBounce ? 'animate-bounce' : ''}`}>
           Your notifications
         </p>
       </div>
       {displayDrawer ? (
-        <div className="rounded-lg border border-dashed border-[var(--color-main)] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-4">
-          {hasNotifications ? (
+        <div className="fixed inset-0 z-50 overflow-y-auto border-0 bg-white p-3 shadow-sm min-[913px]:static min-[913px]:z-auto min-[913px]:h-auto min-[913px]:w-auto min-[913px]:rounded-lg min-[913px]:border min-[913px]:border-dashed min-[913px]:border-[var(--main-color)] min-[913px]:p-4 min-[913px]:sticky min-[913px]:top-4">
+          {notifications.length > 0 ? (
             <>
               <p className="mb-2 text-sm text-slate-700">Here is the list of notifications</p>
               <button
@@ -24,7 +23,7 @@ export default function Notifications({ notifications, displayDrawer = true }) {
               >
                 <img src={closebtn} alt="Close" className="h-3 w-3" />
               </button>
-              <ul className="space-y-2">
+              <ul className="list-none space-y-2 p-3 min-[913px]:p-0">
                 {notifications.map((notification) => (
                   <NotificationItem
                     key={notification.id}

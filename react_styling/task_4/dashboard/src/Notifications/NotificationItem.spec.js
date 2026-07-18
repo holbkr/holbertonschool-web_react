@@ -7,7 +7,7 @@ test('Check whether the li element has the color blue, and the the attribute dat
 
   expect(li).toBeInTheDocument();
   expect(li).toHaveAttribute('data-notification-type', 'default');
-  expect(li).toHaveStyle('color: blue');
+  expect(li).toHaveClass('text-[var(--default-notification-item)]');
 })
 
 
@@ -17,5 +17,5 @@ test('Check whether the li element has the color red, and the the attribute data
 
   expect(li).toBeInTheDocument();
   expect(li).toHaveAttribute('data-notification-type', 'urgent');
-  expect(li).toHaveStyle('color: red');
+  expect(li).toHaveClass('text-[var(--urgent-notification-item)]');
 })
